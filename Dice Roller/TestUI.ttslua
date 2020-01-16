@@ -99,8 +99,8 @@ local dice_references = {}
 --Defaults
 local Toggles = {}
 Toggles.ExtraSettings = false
-Toggles.Announcer = false
-Toggles.KillTokens = false
+Toggles.Announcer = true
+Toggles.KillTokens = true
 
 function SetDefaults()
     if (Toggles.Announcer) then
