@@ -1,0 +1,592 @@
+local dice_data = {
+    Offensive = {
+        Blue = {
+            [1] = {Surge = 1, Accuracy = 2, Damage = 0},
+            [2] = {Surge = 0, Accuracy = 2, Damage = 1},
+            [3] = {Surge = 0, Accuracy = 3, Damage = 2},
+            [4] = {Surge = 1, Accuracy = 3, Damage = 1},
+            [5] = {Surge = 0, Accuracy = 4, Damage = 2},
+            [6] = {Surge = 0, Accuracy = 5, Damage = 1},
+        },
+        Green = {
+            [1] = {Surge = 1, Accuracy = 1, Damage = 0},
+            [2] = {Surge = 1, Accuracy = 1, Damage = 1},
+            [3] = {Surge = 0, Accuracy = 1, Damage = 2},
+            [4] = {Surge = 1, Accuracy = 2, Damage = 1},
+            [5] = {Surge = 0, Accuracy = 2, Damage = 2},
+            [6] = {Surge = 0, Accuracy = 3, Damage = 2},
+        },
+        Yellow = {
+            [1] = {Surge = 1, Accuracy = 0, Damage = 0},
+            [2] = {Surge = 2, Accuracy = 0, Damage = 1},
+            [3] = {Surge = 0, Accuracy = 1, Damage = 2},
+            [4] = {Surge = 1, Accuracy = 1, Damage = 1},
+            [5] = {Surge = 1, Accuracy = 2, Damage = 0},
+            [6] = {Surge = 0, Accuracy = 2, Damage = 1},
+        },
+        Red = {
+            [1] = {Surge = 0, Accuracy = 0, Damage = 1},
+            [2] = {Surge = 0, Accuracy = 0, Damage = 2},
+            [3] = {Surge = 0, Accuracy = 0, Damage = 2},
+            [4] = {Surge = 1, Accuracy = 0, Damage = 2},
+            [5] = {Surge = 0, Accuracy = 0, Damage = 3},
+            [6] = {Surge = 0, Accuracy = 0, Damage = 3},
+        }
+    },
+    Defensive = {
+        Black = {
+            [1] = {Block = 3, Evade = 0, Dodge = 0},
+            [2] = {Block = 1, Evade = 0, Dodge = 0},
+            [3] = {Block = 2, Evade = 0, Dodge = 0},
+            [4] = {Block = 2, Evade = 0, Dodge = 0},
+            [5] = {Block = 1, Evade = 0, Dodge = 0},
+            [6] = {Block = 0, Evade = 1, Dodge = 0},
+        },
+        White = {
+            [1] = {Block = 1, Evade = 0, Dodge = 0},
+            [2] = {Block = 0, Evade = 0, Dodge = 0},
+            [3] = {Block = 1, Evade = 1, Dodge = 0},
+            [4] = {Block = 0, Evade = 1, Dodge = 0},
+            [5] = {Block = 1, Evade = 1, Dodge = 0},
+            [6] = {Block = 0, Evade = 0, Dodge = 1},
+        }
+    }
+}
+
+local current_dice = {
+    Blue = {},
+    Green = {},
+    Yellow = {},
+    Red = {},
+    Black = {},
+    White = {},
+}
+
+local assets = {
+    {
+        name = "Background", url = "http://cloud-3.steamusercontent.com/ugc/792002368478960350/07428E3D13BE5A32C27B1FF67A77C6C73CD0D940/"
+    },
+    {
+        name = "BlackDice", url = "http://cloud-3.steamusercontent.com/ugc/792002368479040623/1D30BB3D632FE6BBF65B2F1EDA5723E909879690/"
+    },
+    {
+        name = "BlueDice", url = "http://cloud-3.steamusercontent.com/ugc/792002368479032984/196DBC5599CE4CA2471AA7980933BF155ECBD2EF/"
+    },
+    {
+        name = "Button_Toggle", url = "http://cloud-3.steamusercontent.com/ugc/792002368478961386/C11FC707CC3D24080645FB9A6AF8B687932801D1/"
+    },
+    {
+        name = "Button_Normal", url = "http://cloud-3.steamusercontent.com/ugc/792002368478961628/E714B4B81C59C4814FCACDD82787EBE3CF84C21B/"
+    },
+    {
+        name = "GreenDice", url = "http://cloud-3.steamusercontent.com/ugc/792002368479041400/175C866B0230724442BF071ED6881B9B668453DB/"
+    },
+    {
+        name = "RedDice", url = "http://cloud-3.steamusercontent.com/ugc/792002368479041753/BB0AB34016A5299C4C4280A5BA5871E377089744/"
+    },
+    {
+        name = "WhiteDice", url = "http://cloud-3.steamusercontent.com/ugc/792002368479042235/AACE8A3914D12EBDE2B1AD86A391CAF4DB0D9A40/"
+    },
+    {
+        name = "YellowDice", url = "http://cloud-3.steamusercontent.com/ugc/792002368479042559/4F748404EBD4B283CF1BCF208897D66630B4790B/"
+    }
+}
+
+local dice_references = {}
+
+--Defaults
+local Toggles = {}
+Toggles.ExtraSettings = false
+Toggles.Announcer = false
+Toggles.KillTokens = false
+
+function SetDefaults()
+    if (Toggles.Announcer) then
+        self.UI.setAttribute("Sett_Toggle_1", "isOn", "true")
+    else
+        self.UI.setAttribute("Sett_Toggle_1", "isOn", "false")
+    end
+
+    if (Toggles.KillTokens) then
+        self.UI.setAttribute("Sett_Toggle_2", "isOn", "true")
+    else
+        self.UI.setAttribute("Sett_Toggle_2", "isOn", "false")
+    end
+
+    if (Toggles.ExtraSettings) then
+        self.UI.setAttribute("ExtraSettingsToggle", "isOn", "true")
+        ExtraSettingsVis(true)
+    else
+        self.UI.setAttribute("ExtraSettingsToggle", "isOn", "false")
+        --printToAll("Calling ESV false at OnLoad", "White")
+        ExtraSettingsVis(false)
+    end
+end
+
+function onLoad(save_state)
+    math.randomseed(os.time())
+
+    self.UI.setCustomAssets(assets)
+
+    local result = GetDiceByDesc()
+    GetPlatforms()
+    --printToAll("Found: Blue: " .. tostring(result.Blue) .. " Green: " .. tostring(result.Green) .. " Yellow: " .. tostring(result.Yellow) .. " Red: " .. tostring(result.Red) .. " Black: " .. tostring(result.Black) .. " White: " .. tostring(result.White), {0, 1, 1})
+
+    Wait.time(SetDefaults, 0.5, 0)
+end
+
+function GetPlatforms()
+    local foundSpawnP = false
+    local foundTokenP = false
+    local allObjs = getAllObjects()
+
+    for _, obj in ipairs(allObjs) do
+        if (foundSpawnP == false) then
+            if (obj.getDescription() == "Dice Spawn Platform") then
+                foundSpawnP = true
+                dice_references.SpawnPlatform = obj
+                printToAll("Found the spawn platform", {0, 1, 1})
+            end
+        end
+        if (foundTokenP == false) then
+            if (obj.getDescription() == "Token Platform") then
+                foundTokenP = true
+                dice_references.TokenPlatform = obj
+                printToAll("Found the token platform", {0, 1, 1})
+            end
+        end
+    end
+
+    if (foundSpawnP == false) then
+        dice_references.SpawnPlatform = nil
+        printToAll("Could not find Spawn Platform. Make the description of any object 'Dice Spawn Platform' without the single quotes", {0, 1, 1})
+    end
+    if (foundTokenP == false) then
+        dice_references.TokenPlatform = nil
+        printToAll("Could not find Token Platform. Make the description of any object 'Token Platform' without the single quotes", {0, 1, 1})
+    end
+end
+
+function GetDiceByDesc()
+    local found = {
+        Blue = false,
+        Green = false,
+        Yellow = false,
+        Red = false,
+        Black = false,
+        White = false,
+    }
+
+    --[[
+    local result = Physics.cast({
+        origin = self.getPosition(),
+        type = 2,
+        direction = {0, 1, 0},
+        size = {10, 10, 10},
+        max_distance = 0,
+        debug = true
+    })
+    --]]
+
+    --[[
+    for _, obj in ipairs(result) do
+        --Could probably optimize these
+        if (found.Blue == false) then
+            if (obj.hit_object.getDescription() == "Blue Dice") then
+                dice_references.Blue = obj.hit_object
+                found.Blue = true
+            end
+        end
+        if (found.Green == false) then
+            if (obj.hit_object.getDescription() == "Green Dice") then
+                dice_references.Green = obj.hit_object
+                found.Green = true
+            end
+        end
+        if (found.Yellow == false) then
+            if (obj.hit_object.getDescription() == "Yellow Dice") then
+                dice_references.Yellow = obj.hit_object
+                found.Yellow = true
+            end
+        end
+        if (found.Red == false) then
+            if (obj.hit_object.getDescription() == "Red Dice") then
+                dice_references.Red = obj.hit_object
+                found.Red = true
+            end
+        end
+        if (found.Black == false) then
+            if (obj.hit_object.getDescription() == "Black Dice") then
+                dice_references.Black = obj.hit_object
+                found.Black = true
+            end
+        end
+        if (found.White == false) then
+            if (obj.hit_object.getDescription() == "White Dice") then
+                dice_references.White = obj.hit_object
+                found.White = true
+            end
+        end
+    end
+    --]]
+
+    local result = getAllObjects()
+
+    for _, obj in ipairs(result) do
+        --Could probably optimize these
+        if (found.Blue == false) then
+            if (obj.getDescription() == "Blue Dice") then
+                dice_references.Blue = obj
+                found.Blue = true
+            end
+        end
+        if (found.Green == false) then
+            if (obj.getDescription() == "Green Dice") then
+                dice_references.Green = obj
+                found.Green = true
+            end
+        end
+        if (found.Yellow == false) then
+            if (obj.getDescription() == "Yellow Dice") then
+                dice_references.Yellow = obj
+                found.Yellow = true
+            end
+        end
+        if (found.Red == false) then
+            if (obj.getDescription() == "Red Dice") then
+                dice_references.Red = obj
+                found.Red = true
+            end
+        end
+        if (found.Black == false) then
+            if (obj.getDescription() == "Black Dice") then
+                dice_references.Black = obj
+                found.Black = true
+            end
+        end
+        if (found.White == false) then
+            if (obj.getDescription() == "White Dice") then
+                dice_references.White = obj
+                found.White = true
+            end
+        end
+    end
+
+    return found
+end
+
+function AddDice(player, value, id)
+    local spawnPos = dice_references.SpawnPlatform.getPosition()
+    spawnPos.x = spawnPos.x + (math.random() + math.random(-2, 2))
+    spawnPos.y = spawnPos.y + 4
+    spawnPos.z = spawnPos.z + (math.random() + math.random(-2, 2))
+
+    local cloned = nil
+
+    if (id == "BlueColor") then
+        cloned = dice_references.Blue.clone({position = spawnPos})
+        table.insert(current_dice.Blue, cloned)
+    elseif (id == "GreenColor") then
+        cloned = dice_references.Green.clone({position = spawnPos})
+        table.insert(current_dice.Green, cloned)
+    elseif (id == "YellowColor") then
+        cloned = dice_references.Yellow.clone({position = spawnPos})
+        table.insert(current_dice.Yellow, cloned)
+    elseif (id == "RedColor") then
+        cloned = dice_references.Red.clone({position = spawnPos})
+        table.insert(current_dice.Red, cloned)
+    elseif (id == "BlackColor") then
+        cloned = dice_references.Black.clone({position = spawnPos})
+        table.insert(current_dice.Black, cloned)
+    elseif (id == "WhiteColor") then
+        cloned = dice_references.White.clone({position = spawnPos})
+        table.insert(current_dice.White, cloned)
+    end
+end
+
+function RemoveDice(player, value, id)
+    local removed = nil
+    if (id == "BlueColor" and #current_dice.Blue > 0) then
+        removed = table.remove(current_dice.Blue)
+    elseif (id == "GreenColor" and #current_dice.Green > 0) then
+        removed = table.remove(current_dice.Green)
+    elseif (id == "YellowColor" and #current_dice.Yellow > 0) then
+        removed = table.remove(current_dice.Yellow)
+    elseif (id == "RedColor" and #current_dice.Red > 0) then
+        removed = table.remove(current_dice.Red)
+    elseif (id == "BlackColor" and #current_dice.Black > 0) then
+        removed = table.remove(current_dice.Black)
+    elseif (id == "WhiteColor" and #current_dice.White > 0) then
+        removed = table.remove(current_dice.White)
+    end
+
+    if (removed ~= nil) then
+        destroyObject(removed)
+    end
+end
+
+function AllDiceResting()
+    local allResting = true
+
+    for k, v in pairs(current_dice) do
+        if (allResting == true) then
+            for i, obj in ipairs(v) do
+                if (obj.resting == false) then
+                    allResting = false
+                    break
+                end
+            end
+        else
+            break
+        end
+    end
+
+    return allResting
+end
+
+function ReadDice()
+    local surge = 0
+    local accuracy = 0
+    local damage = 0
+
+    local block = 0
+    local evade = 0
+    local dodge = 0
+
+    --if (dice_references.TokenPlatform ~= nil) then
+    if (true) then
+        --[[local physResult = Physics.cast({
+            origin = dice_references.TokenPlatform.getPosition(),
+            direction = {0, 1, 0},
+            type = 2,
+            size = {4, 4, 4},
+            max_distance = 0,
+            debug = true
+        })--]]
+        local physResult = Physics.cast({
+            origin = {-32.04, 5.01, -0.20},
+            direction = {0, 1, 0},
+            type = 3,
+            size = {2.30, 0.52, 5.13},
+            max_distance = 0,
+            debug = true
+        })
+
+        for _, objHit in ipairs(physResult) do
+            local obj = objHit.hit_object
+            local shouldDestroy = false
+            if (obj.getName() == "Block" and obj.getDescription() == "Block") then
+                block = block + 1
+                if (Toggles.KillTokens == true) then
+                    shouldDestroy = true
+                end
+            end
+            if (obj.getName() == "Evade" and obj.getDescription() == "Evade") then
+                evade = evade + 1
+                if (Toggles.KillTokens == true) then
+                    shouldDestroy = true
+                end
+            end
+            if (obj.getName() == "Damage" and obj.getDescription() == "Damage") then
+                damage = damage + 1
+                if (Toggles.KillTokens == true) then
+                    shouldDestroy = true
+                end
+            end
+            if (obj.getName() == "Surge" and obj.getDescription() == "Surge") then
+                surge = surge + 1
+                if (Toggles.KillTokens == true) then
+                    shouldDestroy = true
+                end
+            end
+
+            if (shouldDestroy == true) then
+                destroyObject(obj)
+            end
+        end
+    end
+
+    for k, v in pairs(current_dice) do
+        for i, obj in ipairs(v) do
+            local rotationValueString = obj.getRotationValue()
+            local allRotationValues = obj.getRotationValues()
+
+            local rotationValue = 1
+            for i, v in ipairs(allRotationValues) do
+                if (rotationValueString == v.value) then
+                    rotationValue = i
+                    break
+                end
+            end
+
+            local data = nil
+            local isDefensive = false
+            if (k == "Blue") then
+                data = dice_data.Offensive.Blue[rotationValue]
+            elseif (k == "Green") then
+                data = dice_data.Offensive.Green[rotationValue]
+            elseif (k == "Yellow") then
+                data = dice_data.Offensive.Yellow[rotationValue]
+            elseif (k == "Red") then
+                data = dice_data.Offensive.Red[rotationValue]
+            elseif (k == "Black") then
+                data = dice_data.Defensive.Black[rotationValue]
+                isDefensive = true
+            elseif (k == "White") then
+                data = dice_data.Defensive.White[rotationValue]
+                isDefensive = true
+            end
+
+            if (data ~= nil) then
+                if (isDefensive == false) then
+                    surge = surge + data.Surge
+                    accuracy = accuracy + data.Accuracy
+                    damage = damage + data.Damage
+                else
+                    block = block + data.Block
+                    evade = evade + data.Evade
+                    dodge = dodge + data.Dodge
+                end
+            else
+                printToAll("Data is nil", {1, 0, 0})
+            end
+        end
+    end
+
+    if (surge > 0 or accuracy > 0 or damage > 0) then
+        AnnounceToAll("Surge: " .. surge .. " - Accuracy: " .. accuracy .. " - Damage: " .. damage, {0, 1, 0})
+    end
+    if (block > 0 or evade > 0 or dodge > 0) then
+        AnnounceToAll("Block: " .. block .. " - Evade: " .. evade .. " - Dodge: " .. dodge, {1, 1, 1})
+    end
+end
+
+function RollDice(player, value, id)
+    local foundDice = false
+
+    for k, v in pairs(current_dice) do
+        for i, obj in ipairs(v) do
+            if (foundDice == false) then
+                foundDice = true
+            end
+            obj.roll()
+        end
+    end
+
+    if (foundDice == false) then
+        printToAll("No dice to roll", {0, 1, 1})
+        return
+    end
+
+    AnnounceToAll(player.steam_name .. " is rolling...", {0, 1, 1})
+    Wait.condition(ReadDice, AllDiceResting)
+end
+
+function ClearDice(player, value, id)
+    local allEmpty = true
+    for k, v in pairs(current_dice) do
+        if (#v > 0) then
+            allEmpty = false
+            break
+        end
+    end
+
+    if (allEmpty == true) then
+        printToAll("No dice have been spawned yet", {0, 1, 1})
+        return
+    end
+
+    for k, v in pairs(current_dice) do
+        for i, obj in ipairs(v) do
+            destroyObject(obj)
+            v[i] = nil
+        end
+    end
+end
+
+function ResetSpawn(player, value, id)
+    GetPlatforms()
+    local result = GetDiceByDesc()
+
+    printToAll("Found: Blue: " .. tostring(result.Blue) .. " Green: " .. tostring(result.Green) .. " Yellow: " .. tostring(result.Yellow) .. " Red: " .. tostring(result.Red) .. " Black: " .. tostring(result.Black) .. " White: " .. tostring(result.White), {0, 1, 1})
+end
+
+function ToggleAnnouncer(player, isOn, id)
+    if (isOn == "True") then
+        Toggles.Announcer = true
+    else
+        Toggles.Announcer = false
+    end
+end
+
+function ToggleTokenKill(player, isOn, id)
+    if (isOn == "True") then
+        Toggles.KillTokens = true
+    else
+        Toggles.KillTokens = false
+    end
+end
+
+function ToggleSettings(player, value, id)
+    if (Toggles.ExtraSettings == false) then
+        ExtraSettingsVis(true)
+    else
+        ExtraSettingsVis(false)
+    end
+    Toggles.ExtraSettings = not Toggles.ExtraSettings
+end
+
+local ExSettingsToggleSize = 2
+local ExSettingsButtonSize = 1
+local ExSettingsPanels = ExSettingsToggleSize + ExSettingsButtonSize
+function ExtraSettingsVis(show)
+    local PanelString = "Sett_Panel_"
+    local ToggleString = "Sett_Toggle_"
+
+    local PanelButtonString = "Sett_Panel_Button_"
+    local ButtonString = "Sett_Button_"
+
+    local invisibleColor = "rgba(0,0,0,0)"
+    --local defPanelColor = "rgba(0.125,0.125,0.125,1)"
+    local defPanelColor = "rgba(0,0,0,0)"
+
+    if (show) then
+        for i=1, ExSettingsPanels do
+            self.UI.setAttribute(PanelString .. tostring(i), "color", defPanelColor)
+        end
+        for i=1, ExSettingsToggleSize do
+            local toggleName = ToggleString .. tostring(i)
+            self.UI.setAttribute(toggleName, "textColor", "White")
+            self.UI.setAttribute(toggleName, "interactable", "true")
+        end
+        for i=1, ExSettingsButtonSize do
+            local buttonName = ButtonString .. tostring(i)
+            self.UI.setAttribute(buttonName, "textColor", "Black")
+            self.UI.setAttribute(buttonName, "interactable", "true")
+        end
+        self.UI.setAttribute("BackgroundExSettings", "color", "rgba(1,1,1,0.98)")
+    else
+        for i=1, ExSettingsPanels do
+            self.UI.setAttribute(PanelString .. tostring(i), "color", invisibleColor)
+        end
+        for i=1, ExSettingsToggleSize do
+            local toggleName = ToggleString .. tostring(i)
+            self.UI.setAttribute(toggleName, "textColor", invisibleColor)
+            self.UI.setAttribute(toggleName, "interactable", "false")
+        end
+        for i=1, ExSettingsButtonSize do
+            local buttonName = ButtonString .. tostring(i)
+            self.UI.setAttribute(buttonName, "textColor", invisibleColor)
+            self.UI.setAttribute(buttonName, "interactable", "false")
+        end
+        self.UI.setAttribute("BackgroundExSettings", "color", invisibleColor)
+    end
+end
+
+function AnnounceToAll(string, color)
+    if (Toggles.Announcer == true) then
+        broadcastToAll(string, color)
+    else
+        printToAll(string, color)
+    end
+end

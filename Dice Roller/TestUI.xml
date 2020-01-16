@@ -1,0 +1,141 @@
+<Defaults>
+    <Text class="Title" alignment="UpperCenter" color="#ffffff" fontSize="24" outline="#000000"/>
+    <Button class="AddButton" onClick="AddDice" colors="rgba(0.5,0.5,0.5,0)|rgba(0.5,0.5,0.5,0.1)|rgba(0.5,0.5,0.5,0.2)|rgb(0.1,0.1,0.1)" textColor="#ffffff" fontSize="40" text="+" preferredWidth="45" preferredHeight="45" ignoreLayout="true" position="-20,0,0" width="45" height="45"/>
+    <Button class="RemoveButton" onClick="RemoveDice" colors="rgba(0.5,0.5,0.5,0)|rgba(0.5,0.5,0.5,0.1)|rgba(0.5,0.5,0.5,0.2)|rgb(0.1,0.1,0.1)" textColor="#ffffff" fontSize="40" text="-" preferredWidth="45" preferredHeight="45" ignoreLayout="true" position="20,0,0" width="45" height="45"/>
+    <Button class="RollButton" onClick="RollDice" colors="rgb(1,1,1)|rgb(1,1,1)|rgb(1,1,1)|rgb(0.1,0.1,0.1)" image="Button_Normal" fontSize="30" text="Roll" preferredWidth="150" preferredHeight="70"/>
+    <Button class="ClearButton" onClick="ClearDice" colors="rgb(1,1,1)|rgb(1,1,1)|rgb(1,1,1)|rgb(0.1,0.1,0.1)" image="Button_Normal" fontSize="30" text="Clear all" preferredWidth="150" preferredHeight="70"/>
+    <Button class="ResetSpawnButton" onClick="ResetSpawn" colors="rgb(1,1,1)|rgb(1,1,1)|rgb(1,1,1)|rgba(0.1,0.1,0.1,0)" image="Button_Normal" fontSize="20" text="Reset Objects" preferredWidth="150" preferredHeight="45"/>
+    <HorizontalLayout class="Panels" spacing="5" childForceExpandHeight="false" childForceExpandWidth="false"/>
+    <HorizontalLayout class="AddRemovePanel" spacing="5" childForceExpandWidth="true" childForceExpandHeight="true"/>
+    <VerticalLayout class="BackElement" spacing="5" padding="5 5 5 5" color="rgba(0.125,0.125,0.125,0)" childForceExpandWidth="false" childForceExpandHeight="false" childAlignment="UpperCenter"/>
+    <Panel class="DiceColor" flexibleWidth="0" flexibleHeight="0" preferredWidth="50" preferredHeight="50"/>
+    <Image class="BaseDice" preferredWidth="100" preferredHeight="100"/>
+    <Panel class="SpacingPanel" preferredWidth="50" preferredHeight="50"/>
+    <Toggle class="BasicToggle" colors="rgb(0.5,0.5,0.5)|rgb(0.7,0.7,0.7)|rgb(0.9,0.9,0.9)|rgba(0.1,0.1,0.1,0)" textColor="#ffffff" fontSize="18" preferredWidth="150" preferredHeight="45"/>
+    <Panel class="BasicPanel" color="rgba(0,0,0,0)" padding="5 5 5 5" childForceExpandWidth="false" childForceExpandHeight="false"/>
+    <Panel class="MainBackground" padding="5 5 5 5" childAlignment="MiddleCenter" childForceExpandWidth="false" childForceExpandHeight="false" image="Background" color="rgba(1,1,1,0.98)"/>
+</Defaults>
+
+<HorizontalLayout
+    position="45,-300,-100"
+    width="850"
+    height="400"
+    childForceExpandWidth="false"
+    childForceExpandHeight="false"
+    spacing="80"
+    flexibleWidth="1"
+    >
+    <Panel class="MainBackground" padding="35 10 25 25"
+        >
+        <VerticalLayout
+            id="MainLayoutPanel"
+            active="true"
+            padding="5 5 5 5"
+            spacing="5"
+            childForceExpandWidth="false"
+            childAlignment="MiddleCenter"
+            >
+            <HorizontalLayout
+                class="Panels"
+                >
+                <VerticalLayout class="BackElement" color="rgba(0,0,0,0)"
+                    >
+                    <!--<Text class="Title">Blue</Text>-->
+                    <Image class="BaseDice" image="BlueDice"></Image>
+                    <Button class="AddButton" id="BlueColor"></Button>
+                    <Button class="RemoveButton" id="BlueColor"></Button>
+                </VerticalLayout>
+                <VerticalLayout class="BackElement" color="rgba(0,0,0,0)"
+                    >
+                    <!--<Text class="Title">Green</Text>-->
+                    <Image class="BaseDice" image="GreenDice"></Image>
+                    <Button class="AddButton" id="GreenColor"></Button>
+                    <Button class="RemoveButton" id="GreenColor"></Button>
+                </VerticalLayout>
+                <VerticalLayout class="BackElement" color="rgba(0,0,0,0)"
+                    >
+                    <!--<Text class="Title">Yellow</Text>-->
+                    <Image class="BaseDice" image="YellowDice"></Image>
+                    <Button class="AddButton" id="YellowColor"></Button>
+                    <Button class="RemoveButton" id="YellowColor"></Button>
+                </VerticalLayout>
+            </HorizontalLayout>
+            <HorizontalLayout
+                class="Panels"
+                >
+                <VerticalLayout class="BackElement" color="rgba(0,0,0,0)"
+                    >
+                    <!--<Text class="Title">Red</Text>-->
+                    <Image class="BaseDice" image="RedDice"></Image>
+                    <Button class="AddButton" id="RedColor"></Button>
+                    <Button class="RemoveButton" id="RedColor"></Button>
+                </VerticalLayout>
+                <VerticalLayout class="BackElement" color="rgba(0,0,0,0)"
+                    >
+                    <!--<Text class="Title">Black</Text>-->
+                    <Image class="BaseDice" image="BlackDice" color="rgb(0.68,0.68,0.68)"></Image>
+                    <Button class="AddButton" id="BlackColor"></Button>
+                    <Button class="RemoveButton" id="BlackColor"></Button>
+                </VerticalLayout>
+                <VerticalLayout class="BackElement" color="rgba(0,0,0,0)"
+                    >
+                    <!--<Text class="Title">White</Text>-->
+                    <Image class="BaseDice" image="WhiteDice" color="rgb(0.88,0.88,0.88)"></Image>
+                    <Button class="AddButton" id="WhiteColor"></Button>
+                    <Button class="RemoveButton" id="WhiteColor"></Button>
+                </VerticalLayout>
+            </HorizontalLayout>
+            <HorizontalLayout
+                class="Panels"
+                childAlignment="MiddleCenter"
+                >
+                <VerticalLayout
+                    class="BackElement"
+                    childAlignment="MiddleCenter"
+                    >
+                    <Button class="RollButton"></Button>
+                </VerticalLayout>
+                <VerticalLayout
+                    class="BackElement"
+                    childAlignment="MiddleCenter"
+                    >
+                    <Button class="ClearButton"></Button>
+                </VerticalLayout>
+            </HorizontalLayout>
+        </VerticalLayout>
+        <VerticalLayout
+            preferredHeight="1000"
+            childForceExpandWidth="false"
+            childForceExpandHeight="false"
+            padding="-10 5 -20 5"
+            childAlignment="UpperCenter"
+            >
+            <Panel class="BasicPanel" childForceExpandWidth="false" childForceExpandHeight="false" childAlignment="UpperCenter" color="rgba(0,0,0,0)">
+                <Button
+                id="ExtraSettingsToggle"
+                onClick="ToggleSettings"
+                colors="rgb(0.5,0.5,0.5)|rgb(0.7,0.7,0.7)|rgb(0.9,0.9,0.9)|rgba(0.1,0.1,0.1,0)"
+                image="Button_Toggle"
+                preferredWidth="30"
+                preferredHeight="30"
+                >
+            </Button>
+            </Panel>
+        </VerticalLayout>
+    </Panel>
+    <Panel class="MainBackground" id="BackgroundExSettings">
+        <VerticalLayout
+            id="ExtraSettings"
+            childForceExpandWidth="false"
+            childForceExpandHeight="false"
+            active="true"
+            padding="5 5 5 5"
+            spacing="5"
+            childAlignment="UpperCenter"
+            >
+            <Panel class="BasicPanel" id="Sett_Panel_1" childAlignment="MiddleCenter" preferredWidth="300"><Button class="ResetSpawnButton" id="Sett_Button_1" preferredWidth="150"></Button></Panel>
+            <Panel class="BasicPanel" id="Sett_Panel_2"><Toggle class="BasicToggle" id="Sett_Toggle_1" text="Announce Rolls" onValueChanged="ToggleAnnouncer"></Toggle></Panel>
+            <Panel class="BasicPanel" id="Sett_Panel_3"><Toggle class="BasicToggle" id="Sett_Toggle_2" text="Remove tokens after Roll" onValueChanged="ToggleTokenKill"></Toggle></Panel>
+        </VerticalLayout>
+    </Panel>
+</HorizontalLayout>
