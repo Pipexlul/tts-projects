@@ -1,3 +1,5 @@
+local cast_debug = false
+
 local dice_data = {
     Offensive = {
         Blue = {
@@ -148,6 +150,7 @@ function GetPlatforms()
                 printToAll("Found the spawn platform", {0, 1, 1})
             end
         end
+        --[[
         if (foundTokenP == false) then
             if (obj.getDescription() == "Token Platform") then
                 foundTokenP = true
@@ -155,16 +158,19 @@ function GetPlatforms()
                 printToAll("Found the token platform", {0, 1, 1})
             end
         end
+        --]]
     end
 
     if (foundSpawnP == false) then
         dice_references.SpawnPlatform = nil
         printToAll("Could not find Spawn Platform. Make the description of any object 'Dice Spawn Platform' without the single quotes", {0, 1, 1})
     end
+    --[[
     if (foundTokenP == false) then
         dice_references.TokenPlatform = nil
         printToAll("Could not find Token Platform. Make the description of any object 'Token Platform' without the single quotes", {0, 1, 1})
     end
+    --]]
 end
 
 function GetDiceByDesc()
@@ -369,7 +375,7 @@ function ReadDice()
             type = 3,
             size = {2.30, 0.52, 5.13},
             max_distance = 0,
-            debug = true
+            debug = cast_debug
         })
 
         for _, objHit in ipairs(physResult) do
