@@ -1,0 +1,10 @@
+<Button
+    onClick="MapChangerOnClick"
+    colors="rgba(0.6,0.6,0.6,0.85)|rgba(0.7,0.7,0.7,0.85)|rgba(0.8,0.8,0.8,0.85)|rgba(0.2,0.2,0.2,0.75)"
+    width="150"
+    height="150"
+    text="Placeholder"
+    fontSize="24"
+    position="0 0 -100"
+    >
+</Button>
