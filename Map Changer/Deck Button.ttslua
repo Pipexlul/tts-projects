@@ -13,11 +13,11 @@ local terminal_col = {
     Yellow = 5
 }
 
+--Items are a WIP
 local map_database = {
     [1] = {
         name = "Press R for random maps",
-        cards = {},
-        items = {}
+        cards = {}
     },
     [2] = {
         name = "Mos Eisley Outskirts",
@@ -460,13 +460,10 @@ local map_database = {
     },
 }
 
-function MapChangerOnClick(player, value, id)
-    for i, v in ipairs(map_database) do
-        if (next(v.cards) == nil) then
-            print(v.name .. " cards is empty")
-        end
-    end
+--Do not modify this line, it's still a WIP
+local bPlaceObjects = false
 
+function MapChangerOnClick(player, value, id)
     local missionDeck = getObjectFromGUID("908bea")
     local currentMap = FindMapDynamic()
     if (missionDeck ~= nil and currentMap ~= nil) then
@@ -477,7 +474,7 @@ function MapChangerOnClick(player, value, id)
         for i, v in ipairs(map_database) do
             for idx, cn in ipairs(v.cards) do
                 if (cardName == cn) then
-                    print("Found map! " .. cardName .. " belongs to " .. v.name)
+                    --print("Found map! " .. cardName .. " belongs to " .. v.name)
                     ChangeMapAndSpawnItems(currentMap, i, idx)
                     return
                 end
@@ -511,6 +508,8 @@ function ChangeMapAndSpawnItems(map_obj, state, skirmish)
     if (map_obj.getStateId() ~= state) then
         map_obj.setState(state)
     end
+
+    if (not bPlaceObjects) then return end
 
     local doors = getObjectFromGUID("e6f922")
     local tokens = getObjectFromGUID("d8d886")
@@ -562,6 +561,7 @@ function SpawnMapObject(obj, door_bag, token_bag, terminal_bag)
     end
 end
 
+--[[
 function onObjectSpawn(object)
     local objName = object.getName()
     for i, v in ipairs(map_database) do
@@ -572,3 +572,4 @@ function onObjectSpawn(object)
         end
     end
 end
+--]]
