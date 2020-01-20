@@ -464,7 +464,7 @@ local map_database = {
 local bPlaceObjects = false
 
 function MapChangerOnClick(player, value, id)
-    local missionDeck = getObjectFromGUID("908bea")
+    local missionDeck = getObjectFromGUID("36a38e")
     local currentMap = FindMapDynamic()
     if (missionDeck ~= nil and currentMap ~= nil) then
         local allCards = missionDeck.getObjects()
