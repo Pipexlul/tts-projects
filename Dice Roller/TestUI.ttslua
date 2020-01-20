@@ -331,6 +331,7 @@ function RemoveDice(player, value, id)
     end
 end
 
+local isRollingDice = false
 function AllDiceResting()
     local allResting = true
 
@@ -460,11 +461,13 @@ function ReadDice()
     end
 
     if (surge > 0 or accuracy > 0 or damage > 0) then
-        AnnounceToAll("Surge: " .. surge .. " - Accuracy: " .. accuracy .. " - Damage: " .. damage, {0, 1, 0})
+        AnnounceToAll("Damage: " .. damage .. " - Surge: " .. surge .. " - Accuracy: " .. accuracy, {0, 1, 0})
     end
     if (block > 0 or evade > 0 or dodge > 0) then
         AnnounceToAll("Block: " .. block .. " - Evade: " .. evade .. " - Dodge: " .. dodge, {1, 1, 1})
     end
+
+    isRollingDice = false
 end
 
 function RollDice(player, value, id)
@@ -484,8 +487,11 @@ function RollDice(player, value, id)
         return
     end
 
-    AnnounceToAll(player.steam_name .. " is rolling...", {0, 1, 1})
-    Wait.condition(ReadDice, AllDiceResting)
+    if (not isRollingDice) then
+        isRollingDice = true
+        AnnounceToAll(player.steam_name .. " is rolling...", {0, 1, 1})
+        Wait.condition(ReadDice, AllDiceResting)
+    end
 end
 
 function ClearDice(player, value, id)
@@ -498,7 +504,7 @@ function ClearDice(player, value, id)
     end
 
     if (allEmpty == true) then
-        printToAll("No dice have been spawned yet", {0, 1, 1})
+        --printToAll("No dice have been spawned yet", {0, 1, 1})
         return
     end
 
@@ -508,6 +514,8 @@ function ClearDice(player, value, id)
             v[i] = nil
         end
     end
+
+    isRollingDice = false
 end
 
 function ResetSpawn(player, value, id)
