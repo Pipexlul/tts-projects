@@ -320,7 +320,7 @@ local map_database = {
     },
     [16] = {
         name = "Training Ground",
-        cards = {}
+        cards = {"Reprogrammed", "Deception Game"}
     },
     [17] = {
         name = "Development Facility",
@@ -352,7 +352,7 @@ local map_database = {
     },
     [24] = {
         name = "Imperial Command Hub",
-        cards = {}
+        cards = {"Uplink", "Delivery System"}
     },
     [25] = {
         name = "Coruscant Landfill",
@@ -448,15 +448,15 @@ local map_database = {
     },
     [48] = {
         name = "Devaron Garrison",
-        cards = {}
+        cards = {"Arms Salvage", "Secure Munitions"}
     },
     [49] = {
         name = "Lothal Spaceport",
-        cards = {}
+        cards = {"Market Sabotage", "Mortar Fire"}
     },
     [50] = {
         name = "Imperial Tower",
-        cards = {}
+        cards = {"Intruder Alert", "Close Contact"}
     },
 }
 
