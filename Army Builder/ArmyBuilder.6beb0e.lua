@@ -1,3 +1,4 @@
+--[[
 function TableToString(val, name, skipnewlines, depth)
     skipnewlines = skipnewlines or false
     depth = depth or 0
@@ -26,6 +27,7 @@ function TableToString(val, name, skipnewlines, depth)
 
     return tmp
 end
+--]]
 
 local Card_Database = {
     Rebel = {
