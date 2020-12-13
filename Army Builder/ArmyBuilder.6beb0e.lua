@@ -13,9 +13,9 @@ function TableToString(val, name, skipnewlines, depth)
 
         for k, v in pairs(val) do
             tmp = tmp .. TableToString(v, k, skipnewlines, depth + 1) .. "," ..
-                      (not skipnewlines and "\n" or "")
+            (not skipnewlines and "\n" or "")
         end
-
+        
         tmp = tmp .. string.rep("\t", depth) .. "}"
     elseif type(val) == "number" or type(val) == "boolean" then
         tmp = tmp .. tostring(val)
@@ -24,12 +24,56 @@ function TableToString(val, name, skipnewlines, depth)
     else
         tmp = tmp .. "\"[inserializeable datatype:" .. type(val) .. "]\""
     end
-
+    
     return tmp
 end
---]]
+--]] local Traits = {
+    Brawler = 1,
+    Creature = 2,
+    Droid = 4,
+    ForceUser = 8,
+    Guardian = 16,
+    HeavyWeapon = 32,
+    Hunter = 64,
+    Imperial = 128,
+    Leader = 256,
+    Merc = 512,
+    Rebel = 1024,
+    Smuggler = 2048,
+    Spy = 4096,
+    Trooper = 8192,
+    Unique = 16384,
+    Vehicle = 32768,
+    Wookiee = 65536,
+
+    Any = 131071
+}
 
 local Card_Database = {
+    Command = {
+        BackUrl = "http://cloud-3.steamusercontent.com/ugc/1669110423225693997/881A954287E4882C06142AC5BCF54C394BFC6AD4/",
+        Cards = {
+            [0] = {name = "", url = "", cardCost = 0, traits = 0},
+            [1] = {
+                name = "A Powerful Influence",
+                url = "http://cloud-3.steamusercontent.com/ugc/1669110423225726270/59619F63B1450135463E8821C1200D1DB2AFEAE1/",
+                cardCost = 2,
+                traits = Traits.ForceUser
+            },
+            [2] = {
+                name = "Adrenaline",
+                url = "http://cloud-3.steamusercontent.com/ugc/1669110423225731421/200773E4859945B0766787E0E9BEDA1136731913/",
+                cardCost = 2,
+                traits = Traits.Wookiee
+            },
+            [3] = {
+                name = "Advance Warning",
+                url = "http://cloud-3.steamusercontent.com/ugc/1669110423225735711/A8BFE318FD5191EFE3E02B8087782E71BA04257E/",
+                cardCost = 0,
+                traits = Traits.Leader
+            }
+        }
+    },
     Rebel = {
         BackUrl = "http://cloud-3.steamusercontent.com/ugc/1669110151888417210/7192E14A9C5611D88D105DA431F5024912BB7C08/",
         Deployment = {
@@ -38,7 +82,7 @@ local Card_Database = {
                 url = "",
                 cardCost = 0,
                 isGroup = false,
-                traits = {},
+                traits = 0,
                 figurineData = {}
             },
             [1] = {
@@ -46,7 +90,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151887796322/934D13E287E7AC373B1E2FEA754DAAA7EAD1EC06/",
                 cardCost = 8,
                 isGroup = false,
-                traits = {},
+                traits = bit32.bor(Traits.ForceUser, Traits.Leader, Traits.Spy),
                 figurineData = {}
             },
             [2] = {
@@ -54,7 +98,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151887873645/05F91C8A629668A32E58C8C6504F2D6DED3F4FC8/",
                 cardCost = 4,
                 isGroup = true,
-                traits = {},
+                traits = bit32.bor(Traits.Trooper, Traits.Hunter),
                 figurineData = {}
             },
             [3] = {
@@ -62,7 +106,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889629485/560C63B58926BD113531FCBE2F3E282366AD7C9B/",
                 cardCost = 3,
                 isGroup = true,
-                traits = {},
+                traits = bit32.bor(Traits.Trooper, Traits.Hunter),
                 figurineData = {}
             }
         },
@@ -93,7 +137,7 @@ local Card_Database = {
                 url = "",
                 cardCost = 0,
                 isGroup = false,
-                traits = {},
+                traits = 0,
                 figurineData = {}
             },
             [1] = {
@@ -101,7 +145,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889651017/24F8EC95462DDDEFED14C9072E39C29AFC095D87/",
                 cardCost = 4,
                 isGroup = false,
-                traits = {},
+                traits = Traits.Droid,
                 figurineData = {}
             },
             [2] = {
@@ -109,7 +153,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889659240/90B382EF1B6B33C63932975B2FCC24BD8DCC4A0E/",
                 cardCost = 6,
                 isGroup = false,
-                traits = {},
+                traits = bit32.bor(Traits.Spy, Traits.Leader),
                 figurineData = {}
             },
             [3] = {
@@ -117,7 +161,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889666620/7C71FA2E3494895C5A21A68E839AF313FCE911F5/",
                 cardCost = 9,
                 isGroup = false,
-                traits = {},
+                traits = bit32.bor(Traits.Vehicle, Traits.HeavyWeapon),
                 figurineData = {}
             }
         },
@@ -148,7 +192,7 @@ local Card_Database = {
                 url = "",
                 cardCost = 0,
                 isGroup = false,
-                traits = {},
+                traits = 0,
                 figurineData = {}
             },
             [1] = {
@@ -156,7 +200,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889695996/D10799B9DD288A3C1F9849EAF70E237F5E2BCB8E/",
                 cardCost = 9,
                 isGroup = false,
-                traits = {},
+                traits = bit32.bor(Traits.Creature, Traits.Brawler),
                 figurineData = {}
             },
             [2] = {
@@ -164,7 +208,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889698483/F1E0C4A396890F53A8A35EA77B1713C8D05EB98F/",
                 cardCost = 13,
                 isGroup = false,
-                traits = {},
+                traits = Traits.Hunter,
                 figurineData = {}
             },
             [3] = {
@@ -172,7 +216,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889699723/E63A48B7DFB90134072C5314957C5078641CC054/",
                 cardCost = 8,
                 isGroup = false,
-                traits = {},
+                traits = bit32.bor(Traits.Hunter, Traits.Brawler),
                 figurineData = {}
             }
         },
@@ -198,21 +242,45 @@ local Card_Database = {
 }
 
 local PreviewerGUID = "b0833a"
+local FilterGUID = "0d7bc9"
 
-local MenuModes = {Main = 1, RebelBuild = 2, ImpBuild = 3, MercBuild = 4}
+local MenuModes = {
+    Main = 1,
+    RebelBuild = 2,
+    ImpBuild = 3,
+    MercBuild = 4,
+    CommandBuild = 5
+}
 local CurrentMenuMode = MenuModes.Main
 
-local ArmyEnum = {Rebel = 1, Imperial = 2, Mercenary = 3}
-local CardModeEnum = {Deployment = 1, Upgrades = 2}
+local ArmyEnum = {Rebel = 1, Imperial = 2, Mercenary = 3, Command = 4}
+local CardModeEnum = {Deployment = 1, Upgrades = 2, Command = 3}
 
 local SelectedDeploymentCards = {}
 local SelectedUpgradeCards = {}
+local SelectedCommandCards = {}
+
+local CurrentFilterValue = 0
+
+local LastArmyMenu = 0
 
 -- local SelectedPreview = nil
+
+function SetCurrentFilterValue(params)
+    CurrentFilterValue = params[1]
+
+    RebuildUI()
+end
+
+function ShowHideFilter(player, value, id)
+    local filterObj = getObjectFromGUID(FilterGUID)
+    filterObj.call("ToggleShowMenu")
+end
 
 function ResetSelectedCards()
     SelectedDeploymentCards = {}
     SelectedUpgradeCards = {}
+    SelectedCommandCards = {}
 end
 
 function SetMenuMode(player, menu_mode, id)
@@ -221,6 +289,7 @@ function SetMenuMode(player, menu_mode, id)
     if CurrentMenuMode == MenuModes.Main then
         ResetSelectedCards()
         ClearCardPreview()
+        ForceResetFilters()
     end
 
     RebuildUI()
@@ -235,6 +304,8 @@ function AddCard(army, mode, cardId)
         cardDB = Card_Database.Imperial
     elseif army == ArmyEnum.Mercenary then
         cardDB = Card_Database.Mercenary
+    elseif army == ArmyEnum.Command then
+        cardDB = Card_Database.Command
     end
 
     if cardDB == nil then return end
@@ -247,6 +318,9 @@ function AddCard(army, mode, cardId)
     elseif mode == CardModeEnum.Upgrades then
         cardDB = cardDB.Upgrades
         selectedContainer = SelectedUpgradeCards
+    elseif mode == CardModeEnum.Command then
+        cardDB = cardDB.Cards
+        selectedContainer = SelectedCommandCards
     end
 
     if selectedContainer == nil then return end
@@ -292,6 +366,10 @@ function AddCardMercUpgrade(player, cardId, id)
     AddCard(ArmyEnum.Mercenary, CardModeEnum.Upgrades, cardId)
 end
 
+function AddCardCmd(player, cardId, id)
+    AddCard(ArmyEnum.Command, CardModeEnum.Command, cardId)
+end
+
 function RemoveCard(mode, cardId)
     local selectedContainer = nil
 
@@ -299,6 +377,8 @@ function RemoveCard(mode, cardId)
         selectedContainer = SelectedDeploymentCards
     elseif mode == CardModeEnum.Upgrades then
         selectedContainer = SelectedUpgradeCards
+    elseif mode == CardModeEnum.Command then
+        selectedContainer = SelectedCommandCards
     end
 
     if selectedContainer == nil then return end
@@ -323,23 +403,35 @@ function RemoveCardUpgrade(player, cardId, id)
     RemoveCard(CardModeEnum.Upgrades, cardId)
 end
 
+function RemoveCardCmd(player, cardId, id)
+    RemoveCard(CardModeEnum.Command, cardId)
+end
+
 function UpdateAssets(assets, army)
-    local armyCards = nil
+    if army == ArmyEnum.Command then -- Handling the special case of command cards
+        local cmdCards = Card_Database.Command.Cards
 
-    if army == ArmyEnum.Rebel then
-        armyCards = Card_Database.Rebel
-    elseif army == ArmyEnum.Imperial then
-        armyCards = Card_Database.Imperial
-    elseif army == ArmyEnum.Mercenary then
-        armyCards = Card_Database.Mercenary
-    end
+        for i, v in ipairs(cmdCards) do
+            table.insert(assets, {name = v.name, url = v.url})
+        end
+    else -- Normal army cards
+        local armyCards = nil
 
-    for i, v in ipairs(armyCards.Deployment) do
-        table.insert(assets, {name = v.name, url = v.url})
-    end
+        if army == ArmyEnum.Rebel then
+            armyCards = Card_Database.Rebel
+        elseif army == ArmyEnum.Imperial then
+            armyCards = Card_Database.Imperial
+        elseif army == ArmyEnum.Mercenary then
+            armyCards = Card_Database.Mercenary
+        end
 
-    for i, v in ipairs(armyCards.Upgrades) do
-        table.insert(assets, {name = v.name, url = v.url})
+        for i, v in ipairs(armyCards.Deployment) do
+            table.insert(assets, {name = v.name, url = v.url})
+        end
+
+        for i, v in ipairs(armyCards.Upgrades) do
+            table.insert(assets, {name = v.name, url = v.url})
+        end
     end
 
     local previewer = getObjectFromGUID(PreviewerGUID)
@@ -355,6 +447,8 @@ function SetCardPreview(army, mode, cardIndex)
         cardDB = Card_Database.Imperial
     elseif army == ArmyEnum.Mercenary then
         cardDB = Card_Database.Mercenary
+    elseif army == ArmyEnum.Command then
+        cardDB = Card_Database.Command
     end
 
     if cardDB == nil then return end
@@ -363,6 +457,8 @@ function SetCardPreview(army, mode, cardIndex)
         cardDB = cardDB.Deployment
     elseif mode == CardModeEnum.Upgrades then
         cardDB = cardDB.Upgrades
+    elseif mode == CardModeEnum.Command then
+        cardDB = cardDB.Cards
     end
 
     local selectedPreview = cardDB[tonumber(cardIndex)].name
@@ -395,10 +491,30 @@ function SetCardPreviewMercUpgrade(player, cardValue, id)
     SetCardPreview(ArmyEnum.Mercenary, CardModeEnum.Upgrades, cardValue)
 end
 
+function SetCardPreviewCmd(player, cardValue, id)
+    SetCardPreview(ArmyEnum.Command, CardModeEnum.Command, cardValue)
+end
+
 function ClearCardPreview(player, value, id)
     local previewer = getObjectFromGUID(PreviewerGUID)
 
     previewer.call("ClearCardPreview")
+end
+
+function ForceResetFilters()
+    local filterObj = getObjectFromGUID(FilterGUID)
+    filterObj.call("ResetAllFilters")
+    filterObj.call("ToggleShowMenu", {true})
+end
+
+function ToggleCmdCards(player, value, id)
+    if CurrentMenuMode ~= MenuModes.CommandBuild then
+        CurrentMenuMode = MenuModes.CommandBuild
+    else
+        CurrentMenuMode = LastArmyMenu
+    end
+
+    RebuildUI()
 end
 
 function RebuildUI()
@@ -495,6 +611,8 @@ function RebuildUI()
     }
 
     if CurrentMenuMode == MenuModes.Main then
+        LastArmyMenu = 0
+
         menuToDisplay[2] = {
             tag = "Panel",
             attributes = {
@@ -667,7 +785,8 @@ function RebuildUI()
             }
         }
     elseif CurrentMenuMode == MenuModes.RebelBuild or CurrentMenuMode ==
-        MenuModes.ImpBuild or CurrentMenuMode == MenuModes.MercBuild then
+        MenuModes.ImpBuild or CurrentMenuMode == MenuModes.MercBuild or
+        CurrentMenuMode == MenuModes.CommandBuild then
 
         local armyTitle = "Joe Mama"
         local armyColor = "White"
@@ -675,6 +794,12 @@ function RebuildUI()
         local addCardFunction = "AddCard"
         local removeCardFunction = "RemoveCard"
         local cardPreviewFunction = "SetCardPreview"
+
+        local Command_ArmyCardsText = "Command Cards"
+
+        if CurrentMenuMode ~= MenuModes.CommandBuild then
+            LastArmyMenu = CurrentMenuMode
+        end
 
         if CurrentMenuMode == MenuModes.RebelBuild then
             armyTitle = "Rebel Army"
@@ -700,6 +825,15 @@ function RebuildUI()
             -- removeCardFunction = removeCardFunction .. "Merc"
             cardPreviewFunction = cardPreviewFunction .. "Merc"
             UpdateAssets(assets, ArmyEnum.Mercenary)
+        elseif CurrentMenuMode == MenuModes.CommandBuild then
+            armyTitle = "Command Cards"
+            armyColor = menuColors.MainBackground
+            armyCardsRef = Card_Database.Command
+            -- addCardFunction = addCardFunction .. "Cmd"
+            cardPreviewFunction = cardPreviewFunction .. "Cmd"
+            UpdateAssets(assets, ArmyEnum.Command)
+
+            Command_ArmyCardsText = "Army Cards"
         end
 
         menuToDisplay[2] = {
@@ -778,12 +912,12 @@ function RebuildUI()
                                             tag = "Button",
                                             attributes = {
                                                 class = "StandardButton",
-                                                onClick = "AddCurrentSelectedCard"
+                                                onClick = "ToggleCmdCards"
                                             },
                                             children = {
                                                 [1] = {
                                                     tag = "Text",
-                                                    value = "Command Cards",
+                                                    value = Command_ArmyCardsText,
                                                     attributes = {
                                                         class = "ButtonText"
                                                     },
@@ -795,9 +929,7 @@ function RebuildUI()
                                             tag = "Button",
                                             attributes = {
                                                 class = "StandardButton",
-                                                onClick = "SetMenuMode" .. "(" ..
-                                                    tostring(MenuModes.Main) ..
-                                                    ")"
+                                                onClick = "SpawnArmy"
                                             },
                                             children = {
                                                 [1] = {
@@ -920,177 +1052,198 @@ function RebuildUI()
             local selectedElements = menuToDisplay[2].children[1].children[2]
                                          .children[2].children[1].children -- More hardcoded uglyness
 
-            local cardCostElement = menuToDisplay[2].children[1].children[2].children[1].children[1].children[1]
+            local cardCostElement = menuToDisplay[2].children[1].children[2]
+                                        .children[1].children[1].children[1]
             local cardCost = 0
 
             local addCardDeploy = addCardFunction .. "Deploy"
             local addCardUpgrade = addCardFunction .. "Upgrade"
+            local addCardCmd = addCardFunction .. "Cmd"
 
             local removeCardDeploy = removeCardFunction .. "Deploy"
             local removeCardUpgrade = removeCardFunction .. "Upgrade"
+            local removeCardCmd = removeCardFunction .. "Cmd"
 
             local cardPreviewDeploy = cardPreviewFunction .. "Deploy"
             local cardPreviewUpgrade = cardPreviewFunction .. "Upgrade"
 
-            table.insert(scrollElements, {
-                tag = "Text",
-                value = "[Deployment Cards]",
-                attributes = {class = "ButtonText", alignment = "MiddleLeft"}
-            })
-
-            for i, v in ipairs(armyCardsRef.Deployment) do
+            if armyCardsRef.Deployment ~= nil then
                 table.insert(scrollElements, {
-                    tag = "HorizontalLayout",
+                    tag = "Text",
+                    value = "[Deployment Cards]",
                     attributes = {
-                        spacing = "10",
-                        preferredHeight = "40",
-                        flexibleHeight = "0"
-                    },
-                    children = {
-                        [1] = {
-                            tag = "Panel",
+                        class = "ButtonText",
+                        alignment = "MiddleLeft"
+                    }
+                })
+
+                for i, v in ipairs(armyCardsRef.Deployment) do
+                    if CurrentFilterValue == 0 or
+                        bit32.btest(CurrentFilterValue, v.traits) then
+                        table.insert(scrollElements, {
+                            tag = "HorizontalLayout",
                             attributes = {
-                                -- onMouseEnter = cardPreviewDeploy .. "(" .. tostring(i) .. ")",
-                                onMouseDown = cardPreviewDeploy .. "(" ..
-                                    tostring(i) .. ")",
-                                onMouseUp = "ClearCardPreview",
-                                color = "clear", -- menuColors.MainBackground,
-                                padding = "5 5 5 5",
-                                preferredWidth = "300"
+                                spacing = "10",
+                                preferredHeight = "40",
+                                flexibleHeight = "0"
                             },
                             children = {
                                 [1] = {
-                                    tag = "Text",
-                                    value = "- " .. v.name,
+                                    tag = "Panel",
                                     attributes = {
-                                        class = "ButtonText",
-                                        alignment = "MiddleLeft"
-                                    }
-                                }
-                            }
-                        },
-                        [2] = {
-                            tag = "Panel",
-                            attributes = {
-                                color = "clear", -- menuColors.MainBackground,
-                                padding = "5 5 5 5"
-                            },
-                            children = {
-                                [1] = {
-                                    tag = "Button",
-                                    attributes = {
-                                        class = "StandardButton",
-                                        onClick = addCardDeploy .. "(" ..
-                                            tostring(i) .. ")"
+                                        -- onMouseEnter = cardPreviewDeploy .. "(" .. tostring(i) .. ")",
+                                        onMouseDown = cardPreviewDeploy .. "(" ..
+                                            tostring(i) .. ")",
+                                        onMouseUp = "ClearCardPreview",
+                                        color = "clear", -- menuColors.MainBackground,
+                                        padding = "5 5 5 5",
+                                        preferredWidth = "300"
                                     },
                                     children = {
                                         [1] = {
                                             tag = "Text",
-                                            value = "+",
-                                            attributes = {class = "ButtonText"}
+                                            value = "- " .. v.name,
+                                            attributes = {
+                                                class = "ButtonText",
+                                                alignment = "MiddleLeft"
+                                            }
                                         }
                                     }
-                                }
-                            }
-                        }
-                        --[[
-                        [3] = {
-                            tag = "Panel",
-                            attributes = {
-                                color = "clear", -- menuColors.MainBackground,
-                                padding = "5 5 5 5"
-                            },
-                            children = {
-                                [1] = {
-                                    tag = "Button",
+                                },
+                                [2] = {
+                                    tag = "Panel",
                                     attributes = {
-                                        class = "StandardButton",
-                                        onClick = removeCardDeploy .. "(" ..
-                                            tostring(i) .. ")"
+                                        color = "clear", -- menuColors.MainBackground,
+                                        padding = "5 5 5 5"
                                     },
                                     children = {
                                         [1] = {
-                                            tag = "Text",
-                                            value = "-",
-                                            attributes = {class = "ButtonText"}
+                                            tag = "Button",
+                                            attributes = {
+                                                class = "StandardButton",
+                                                onClick = addCardDeploy .. "(" ..
+                                                    tostring(i) .. ")"
+                                            },
+                                            children = {
+                                                [1] = {
+                                                    tag = "Text",
+                                                    value = "+",
+                                                    attributes = {
+                                                        class = "ButtonText"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                --[[
+                            [3] = {
+                                tag = "Panel",
+                                attributes = {
+                                    color = "clear", -- menuColors.MainBackground,
+                                    padding = "5 5 5 5"
+                                },
+                                children = {
+                                    [1] = {
+                                        tag = "Button",
+                                        attributes = {
+                                            class = "StandardButton",
+                                            onClick = removeCardDeploy .. "(" ..
+                                                tostring(i) .. ")"
+                                        },
+                                        children = {
+                                            [1] = {
+                                                tag = "Text",
+                                                value = "-",
+                                                attributes = {class = "ButtonText"}
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                        --]]
+                            --]]
+                            }
+                        })
+                    end
+                end
+
+                table.insert(scrollElements, {
+                    tag = "Text",
+                    attributes = {
+                        class = "ButtonText",
+                        alignment = "MiddleLeft"
                     }
                 })
             end
 
-            table.insert(scrollElements, {
-                tag = "Text",
-                attributes = {class = "ButtonText", alignment = "MiddleLeft"}
-            })
-
-            table.insert(scrollElements, {
-                tag = "Text",
-                value = "[Skirmish Upgrades]",
-                attributes = {class = "ButtonText", alignment = "MiddleLeft"}
-            })
-
-            for i, v in ipairs(armyCardsRef.Upgrades) do
+            if armyCardsRef.Upgrades ~= nil then
                 table.insert(scrollElements, {
-                    tag = "HorizontalLayout",
+                    tag = "Text",
+                    value = "[Skirmish Upgrades]",
                     attributes = {
-                        spacing = "10",
-                        preferredHeight = "40",
-                        flexibleHeight = "0"
-                    },
-                    children = {
-                        [1] = {
-                            tag = "Panel",
-                            attributes = {
-                                class = "HoverablePreview",
-                                -- onMouseEnter = cardPreviewUpgrade .. "(" .. tostring(i) .. ")",
-                                onMouseDown = cardPreviewUpgrade .. "(" ..
-                                    tostring(i) .. ")",
-                                onMouseUp = "ClearCardPreview",
-                                color = "clear", -- menuColors.MainBackground,
-                                padding = "5 5 5 5",
-                                preferredWidth = "300"
-                            },
-                            children = {
-                                [1] = {
-                                    tag = "Text",
-                                    value = "- " .. v.name,
-                                    attributes = {
-                                        class = "ButtonText",
-                                        alignment = "MiddleLeft"
+                        class = "ButtonText",
+                        alignment = "MiddleLeft"
+                    }
+                })
+
+                for i, v in ipairs(armyCardsRef.Upgrades) do
+                    table.insert(scrollElements, {
+                        tag = "HorizontalLayout",
+                        attributes = {
+                            spacing = "10",
+                            preferredHeight = "40",
+                            flexibleHeight = "0"
+                        },
+                        children = {
+                            [1] = {
+                                tag = "Panel",
+                                attributes = {
+                                    -- onMouseEnter = cardPreviewUpgrade .. "(" .. tostring(i) .. ")",
+                                    onMouseDown = cardPreviewUpgrade .. "(" ..
+                                        tostring(i) .. ")",
+                                    onMouseUp = "ClearCardPreview",
+                                    color = "clear", -- menuColors.MainBackground,
+                                    padding = "5 5 5 5",
+                                    preferredWidth = "300"
+                                },
+                                children = {
+                                    [1] = {
+                                        tag = "Text",
+                                        value = "- " .. v.name,
+                                        attributes = {
+                                            class = "ButtonText",
+                                            alignment = "MiddleLeft"
+                                        }
                                     }
                                 }
-                            }
-                        },
-                        [2] = {
-                            tag = "Panel",
-                            attributes = {
-                                color = "clear", -- menuColors.MainBackground,
-                                padding = "5 5 5 5"
                             },
-                            children = {
-                                [1] = {
-                                    tag = "Button",
-                                    attributes = {
-                                        class = "StandardButton",
-                                        onClick = addCardUpgrade .. "(" ..
-                                            tostring(i) .. ")"
-                                    },
-                                    children = {
-                                        [1] = {
-                                            tag = "Text",
-                                            value = "+",
-                                            attributes = {class = "ButtonText"}
+                            [2] = {
+                                tag = "Panel",
+                                attributes = {
+                                    color = "clear", -- menuColors.MainBackground,
+                                    padding = "5 5 5 5"
+                                },
+                                children = {
+                                    [1] = {
+                                        tag = "Button",
+                                        attributes = {
+                                            class = "StandardButton",
+                                            onClick = addCardUpgrade .. "(" ..
+                                                tostring(i) .. ")"
+                                        },
+                                        children = {
+                                            [1] = {
+                                                tag = "Text",
+                                                value = "+",
+                                                attributes = {
+                                                    class = "ButtonText"
+                                                }
+                                            }
                                         }
                                     }
                                 }
                             }
-                        }
-                        --[[
+                            --[[
                         [3] = {
                             tag = "Panel",
                             attributes = {
@@ -1116,8 +1269,84 @@ function RebuildUI()
                             }
                         }
                         --]]
+                        }
+                    })
+                end
+            end
+
+            if armyCardsRef.Cards ~= nil then -- Command cards
+                table.insert(scrollElements, {
+                    tag = "Text",
+                    value = "[Cards]",
+                    attributes = {
+                        class = "ButtonText",
+                        alignment = "MiddleLeft"
                     }
                 })
+
+                for i, v in ipairs(armyCardsRef.Cards) do
+                    if CurrentFilterValue == 0 or
+                        bit32.btest(CurrentFilterValue, v.traits) then
+                        table.insert(scrollElements, {
+                            tag = "HorizontalLayout",
+                            attributes = {
+                                spacing = "10",
+                                preferredHeight = "40",
+                                flexibleHeight = "0"
+                            },
+                            children = {
+                                [1] = {
+                                    tag = "Panel",
+                                    attributes = {
+                                        -- onMouseEnter = cardPreviewUpgrade .. "(" .. tostring(i) .. ")",
+                                        onMouseDown = cardPreviewFunction .. "(" ..
+                                            tostring(i) .. ")",
+                                        onMouseUp = "ClearCardPreview",
+                                        color = "clear", -- menuColors.MainBackground,
+                                        padding = "5 5 5 5",
+                                        preferredWidth = "300"
+                                    },
+                                    children = {
+                                        [1] = {
+                                            tag = "Text",
+                                            value = "- " .. v.name,
+                                            attributes = {
+                                                class = "ButtonText",
+                                                alignment = "MiddleLeft"
+                                            }
+                                        }
+                                    }
+                                },
+                                [2] = {
+                                    tag = "Panel",
+                                    attributes = {
+                                        color = "clear", -- menuColors.MainBackground,
+                                        padding = "5 5 5 5"
+                                    },
+                                    children = {
+                                        [1] = {
+                                            tag = "Button",
+                                            attributes = {
+                                                class = "StandardButton",
+                                                onClick = addCardCmd .. "(" ..
+                                                    tostring(i) .. ")"
+                                            },
+                                            children = {
+                                                [1] = {
+                                                    tag = "Text",
+                                                    value = "+",
+                                                    attributes = {
+                                                        class = "ButtonText"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                    end
+                end
             end
 
             if #SelectedDeploymentCards > 0 then
@@ -1229,6 +1458,74 @@ function RebuildUI()
                                         attributes = {
                                             class = "StandardButton",
                                             onClick = removeCardUpgrade .. "(" ..
+                                                tostring(v.cardNum) .. ")"
+                                        },
+                                        children = {
+                                            [1] = {
+                                                tag = "Text",
+                                                value = "-",
+                                                attributes = {
+                                                    class = "ButtonText"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
+
+                    cardCost = cardCost + (v.amount * v.cost)
+                end
+
+                table.insert(selectedElements, {
+                    tag = "Text",
+                    value = "",
+                    attributes = {class = "ButtonText"}
+                })
+            end
+
+            if #SelectedCommandCards > 0 then
+                table.insert(selectedElements, {
+                    tag = "Text",
+                    value = "[Selected Command Cards]",
+                    attributes = {
+                        class = "ButtonText",
+                        alignment = "MiddleLeft"
+                    }
+                })
+
+                for i, v in ipairs(SelectedCommandCards) do
+                    table.insert(selectedElements, {
+                        tag = "HorizontalLayout",
+                        attributes = {
+                            preferredHeight = "30",
+                            flexibleHeight = "0"
+                        },
+                        children = {
+                            [1] = {
+                                tag = "Text",
+                                value = v.name .. " x" .. tostring(v.amount),
+                                attributes = {
+                                    class = "ButtonText",
+                                    alignment = "MiddleLeft",
+                                    preferredWidth = "300",
+                                    flexibleHeight = "0"
+                                }
+                            },
+                            [2] = {
+                                tag = "Panel",
+                                attributes = {
+                                    color = "clear", -- menuColors.MainBackground,
+                                    padding = "5 5 5 5",
+                                    flexibleHeight = "1"
+                                },
+                                children = {
+                                    [1] = {
+                                        tag = "Button",
+                                        attributes = {
+                                            class = "StandardButton",
+                                            onClick = removeCardCmd .. "(" ..
                                                 tostring(v.cardNum) .. ")"
                                         },
                                         children = {
