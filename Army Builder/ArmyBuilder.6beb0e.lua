@@ -53,24 +53,27 @@ local Card_Database = {
     Command = {
         BackUrl = "http://cloud-3.steamusercontent.com/ugc/1669110423225693997/881A954287E4882C06142AC5BCF54C394BFC6AD4/",
         Cards = {
-            [0] = {name = "", url = "", cardCost = 0, traits = 0},
+            [0] = {name = "", url = "", cardCost = 0, traits = 0, cardLimit = 0},
             [1] = {
                 name = "A Powerful Influence",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110423225726270/59619F63B1450135463E8821C1200D1DB2AFEAE1/",
                 cardCost = 2,
-                traits = Traits.ForceUser
+                traits = Traits.ForceUser,
+                cardLimit = 1
             },
             [2] = {
                 name = "Adrenaline",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110423225731421/200773E4859945B0766787E0E9BEDA1136731913/",
                 cardCost = 2,
-                traits = Traits.Wookiee
+                traits = Traits.Wookiee,
+                cardLimit = 1
             },
             [3] = {
                 name = "Advance Warning",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110423225735711/A8BFE318FD5191EFE3E02B8087782E71BA04257E/",
                 cardCost = 0,
-                traits = Traits.Leader
+                traits = Traits.Leader,
+                cardLimit = 1
             }
         }
     },
@@ -83,15 +86,20 @@ local Card_Database = {
                 cardCost = 0,
                 isGroup = false,
                 traits = 0,
-                figurineData = {}
+                figurineData = {},
+                cardLimit = 1,
+                unitLimit = 1
             },
             [1] = {
                 name = "Ahsoka Tano",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151887796322/934D13E287E7AC373B1E2FEA754DAAA7EAD1EC06/",
                 cardCost = 8,
                 isGroup = false,
-                traits = bit32.bor(Traits.ForceUser, Traits.Leader, Traits.Spy),
-                figurineData = {}
+                traits = bit32.bor(Traits.ForceUser, Traits.Leader, Traits.Spy,
+                                   Traits.Unique),
+                figurineData = {},
+                cardLimit = 1,
+                unitLimit = 1
             },
             [2] = {
                 name = "Alliance Ranger Elite",
@@ -99,7 +107,9 @@ local Card_Database = {
                 cardCost = 4,
                 isGroup = true,
                 traits = bit32.bor(Traits.Trooper, Traits.Hunter),
-                figurineData = {}
+                figurineData = {},
+                cardLimit = 2,
+                unitLimit = 3
             },
             [3] = {
                 name = "Alliance Ranger",
@@ -107,7 +117,9 @@ local Card_Database = {
                 cardCost = 3,
                 isGroup = true,
                 traits = bit32.bor(Traits.Trooper, Traits.Hunter),
-                figurineData = {}
+                figurineData = {},
+                cardLimit = 2,
+                unitLimit = 3
             }
         },
         Upgrades = {
@@ -243,6 +255,7 @@ local Card_Database = {
 
 local PreviewerGUID = "b0833a"
 local FilterGUID = "0d7bc9"
+local PopupGUID = "5407c8"
 
 local MenuModes = {
     Main = 1,
@@ -260,11 +273,26 @@ local SelectedDeploymentCards = {}
 local SelectedUpgradeCards = {}
 local SelectedCommandCards = {}
 
+local SelectedDeploymentGroupData = {}
+
 local CurrentFilterValue = 0
 
 local LastArmyMenu = 0
 
+local IsInPopUpMode = false
+
 -- local SelectedPreview = nil
+
+function ResultFromPopup(params)
+    local result = params[1]
+
+    local cardToModify = SelectedDeploymentCards[#SelectedDeploymentCards]
+    cardToModify.unitAmount = result
+
+    RebuildUI()
+
+    IsInPopUpMode = false
+end
 
 function SetCurrentFilterValue(params)
     CurrentFilterValue = params[1]
@@ -281,9 +309,13 @@ function ResetSelectedCards()
     SelectedDeploymentCards = {}
     SelectedUpgradeCards = {}
     SelectedCommandCards = {}
+
+    SelectedDeploymentGroupData = {}
 end
 
 function SetMenuMode(player, menu_mode, id)
+    if IsInPopUpMode then return end
+
     CurrentMenuMode = tonumber(menu_mode)
 
     if CurrentMenuMode == MenuModes.Main then
@@ -295,7 +327,18 @@ function SetMenuMode(player, menu_mode, id)
     RebuildUI()
 end
 
+function EnablePopup(cardName, maxUnits)
+    IsInPopUpMode = true
+
+    local popupObj = getObjectFromGUID(PopupGUID)
+    popupObj.call("ActivatePopup", {cardName, maxUnits})
+end
+
 function AddCard(army, mode, cardId)
+    if IsInPopUpMode then return end
+
+    cardId = tonumber(cardId)
+
     local cardDB = nil
 
     if army == ArmyEnum.Rebel then
@@ -327,18 +370,82 @@ function AddCard(army, mode, cardId)
 
     for i, v in ipairs(selectedContainer) do
         if v.cardNum == cardId then
-            v.amount = v.amount + 1
+            local groupDataIndex = nil
+
+            if mode == CardModeEnum.Upgrades then
+                return
+            elseif mode == CardModeEnum.Deployment then
+                if v.isGroup then
+                    for j, v2 in ipairs(SelectedDeploymentGroupData) do
+                        if v2.cardNum == v.cardNum then
+                            groupDataIndex = j
+                            if v2.amount + 1 > v.cardLimit then
+                                return
+                            end
+                        end
+                    end
+                else
+                    if v.amount + 1 > v.cardLimit then return end
+                end
+            elseif mode == CardModeEnum.Command then
+                if v.amount + 1 > v.cardLimit then return end
+            end
+
+            if v.isGroup then
+                local groupData = SelectedDeploymentGroupData[groupDataIndex]
+                groupData.amount = groupData.amount + 1
+            else
+                v.amount = v.amount + 1
+            end
+
             RebuildUI()
-            return
+
+            if not v.isGroup then return end
+        end
+    end
+
+    local function ExistsInGroupData(cardId)
+        for i, v in ipairs(SelectedDeploymentGroupData) do
+            if v.cardNum == cardId then return true end
+        end
+
+        return false
+    end
+
+    local function GetGroupDataIndex(cardId)
+        for i, v in ipairs(SelectedDeploymentGroupData) do
+            if v.cardNum == cardId then return i end
+        end
+
+        return nil
+    end
+
+    if cardDB[tonumber(cardId)].isGroup then
+        if not ExistsInGroupData(cardId) then
+            table.insert(SelectedDeploymentGroupData,
+                         {cardNum = cardId, amount = 1})
         end
     end
 
     table.insert(selectedContainer, {
         cardNum = cardId,
         amount = 1,
+        unitAmount = 1,
         name = cardDB[tonumber(cardId)].name,
-        cost = cardDB[tonumber(cardId)].cardCost
+        cost = cardDB[tonumber(cardId)].cardCost,
+        isGroup = (mode == CardModeEnum.Deployment and
+            cardDB[tonumber(cardId)].isGroup or false),
+        cardLimit = (mode ~= CardModeEnum.Upgrades and
+            cardDB[tonumber(cardId)].cardLimit or 1),
+        unitLimit = (mode == CardModeEnum.Deployment and
+            cardDB[tonumber(cardId)].unitLimit or 1)
     })
+
+    local addedCard = selectedContainer[#selectedContainer]
+    if addedCard.isGroup then
+        EnablePopup(addedCard.name, addedCard.unitLimit)
+    end
+
     RebuildUI()
 end
 
@@ -370,7 +477,13 @@ function AddCardCmd(player, cardId, id)
     AddCard(ArmyEnum.Command, CardModeEnum.Command, cardId)
 end
 
-function RemoveCard(mode, cardId)
+function RemoveCard(mode, cardData)
+    if IsInPopUpMode then return end
+
+    local dashPos = string.find(cardData, "-", 1, true)
+    local cardId = tonumber(string.sub(cardData, 1, dashPos - 1))
+    local indexInTable = tonumber(string.sub(cardData, dashPos + 1))
+
     local selectedContainer = nil
 
     if mode == CardModeEnum.Deployment then
@@ -385,12 +498,42 @@ function RemoveCard(mode, cardId)
 
     for i, v in ipairs(selectedContainer) do
         if v.cardNum == cardId then
-            v.amount = v.amount - 1
+            if mode == CardModeEnum.Upgrades or mode == CardModeEnum.Command then
+                v.amount = v.amount - 1
 
-            if v.amount <= 0 then table.remove(selectedContainer, i) end
+                if v.amount <= 0 then
+                    table.remove(selectedContainer, i)
+                end
 
-            RebuildUI()
-            return
+                RebuildUI()
+                return
+            else
+                if v.isGroup then
+                    for j, v2 in ipairs(SelectedDeploymentGroupData) do
+                        if v2.cardNum == v.cardNum then
+                            v2.amount = v2.amount - 1
+
+                            if v2.amount <= 0 then
+                                table.remove(SelectedDeploymentGroupData, j)
+                            end
+
+                            table.remove(selectedContainer, indexInTable)
+
+                            RebuildUI()
+                            return
+                        end
+                    end
+                else
+                    v.amount = v.amount - 1
+
+                    if v.amount <= 0 then
+                        table.remove(selectedContainer, i)
+                    end
+
+                    RebuildUI()
+                    return
+                end
+            end
         end
     end
 end
@@ -508,6 +651,8 @@ function ForceResetFilters()
 end
 
 function ToggleCmdCards(player, value, id)
+    if IsInPopUpMode then return end
+
     if CurrentMenuMode ~= MenuModes.CommandBuild then
         CurrentMenuMode = MenuModes.CommandBuild
     else
@@ -974,6 +1119,7 @@ function RebuildUI()
                                                     value = "99",
                                                     attributes = {
                                                         class = "ButtonText",
+                                                        fontSize = "32",
                                                         tooltip = "Total card points",
                                                         tooltipPosition = "Above"
                                                     }
@@ -1369,7 +1515,9 @@ function RebuildUI()
                         children = {
                             [1] = {
                                 tag = "Text",
-                                value = v.name .. " x" .. tostring(v.amount),
+                                value = v.name .. " x" .. tostring(v.amount) ..
+                                    (v.isGroup and
+                                        ("/" .. "Units: " .. v.unitAmount) or ""),
                                 attributes = {
                                     class = "ButtonText",
                                     alignment = "MiddleLeft",
@@ -1390,7 +1538,8 @@ function RebuildUI()
                                         attributes = {
                                             class = "StandardButton",
                                             onClick = removeCardDeploy .. "(" ..
-                                                tostring(v.cardNum) .. ")"
+                                                tostring(v.cardNum) .. "-" ..
+                                                tostring(i) .. ")"
                                         },
                                         children = {
                                             [1] = {
@@ -1407,7 +1556,7 @@ function RebuildUI()
                         }
                     })
 
-                    cardCost = cardCost + (v.amount * v.cost)
+                    cardCost = cardCost + (v.amount * v.cost * v.unitAmount)
                 end
 
                 table.insert(selectedElements, {
@@ -1458,7 +1607,8 @@ function RebuildUI()
                                         attributes = {
                                             class = "StandardButton",
                                             onClick = removeCardUpgrade .. "(" ..
-                                                tostring(v.cardNum) .. ")"
+                                                tostring(v.cardNum) .. "-" ..
+                                                tostring(i) .. ")"
                                         },
                                         children = {
                                             [1] = {
@@ -1526,7 +1676,8 @@ function RebuildUI()
                                         attributes = {
                                             class = "StandardButton",
                                             onClick = removeCardCmd .. "(" ..
-                                                tostring(v.cardNum) .. ")"
+                                                tostring(v.cardNum) .. "-" ..
+                                                tostring(i) .. ")"
                                         },
                                         children = {
                                             [1] = {
@@ -1548,6 +1699,9 @@ function RebuildUI()
             end
 
             cardCostElement.value = tostring(cardCost)
+            if tonumber(cardCostElement.value) > 40 then
+                cardCostElement.attributes["color"] = "Red"
+            end
         end
     end
 
@@ -1557,7 +1711,6 @@ end
 
 function onLoad(save_state)
     print("---------------")
-    -- print(TableToString(self.UI.getXmlTable(), "buildMenu"))
 
     RebuildUI()
 end
