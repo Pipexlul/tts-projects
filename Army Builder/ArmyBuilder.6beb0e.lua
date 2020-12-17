@@ -97,9 +97,14 @@ local Card_Database = {
                 isGroup = false,
                 traits = bit32.bor(Traits.ForceUser, Traits.Leader, Traits.Spy,
                                    Traits.Unique),
-                figurineData = {},
+                figurineData = {
+                    mesh = "http://cloud-3.steamusercontent.com/ugc/1010436312492263088/7F0E8BEC685B117FEB45D15D825AB7660D1869BF/",
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/1010436312492263308/A83308826EA1EDF88035FDCE4E3AC19F3F859A52/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/",                    
+                },
                 cardLimit = 1,
-                unitLimit = 1
+                unitLimit = 1,
+                isElite = true
             },
             [2] = {
                 name = "Alliance Ranger Elite",
@@ -107,9 +112,14 @@ local Card_Database = {
                 cardCost = 4,
                 isGroup = true,
                 traits = bit32.bor(Traits.Trooper, Traits.Hunter),
-                figurineData = {},
+                figurineData = {
+                    mesh = "http://cloud-3.steamusercontent.com/ugc/1004808250870187651/886AAA56D9DF9804716C51D4B6FCA0BB6EA1729E/",
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/1004808250870187927/ABCC0D2DDED5B93185649A21FAF9E18E8F4655F1/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/"
+                },
                 cardLimit = 2,
-                unitLimit = 3
+                unitLimit = 3,
+                isElite = true
             },
             [3] = {
                 name = "Alliance Ranger",
@@ -117,9 +127,14 @@ local Card_Database = {
                 cardCost = 3,
                 isGroup = true,
                 traits = bit32.bor(Traits.Trooper, Traits.Hunter),
-                figurineData = {},
+                figurineData = {
+                    mesh = "http://cloud-3.steamusercontent.com/ugc/1004808250870187651/886AAA56D9DF9804716C51D4B6FCA0BB6EA1729E/",
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/1004808250870187927/ABCC0D2DDED5B93185649A21FAF9E18E8F4655F1/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/",
+                },
                 cardLimit = 2,
-                unitLimit = 3
+                unitLimit = 3,
+                isElite = false
             }
         },
         Upgrades = {
@@ -256,6 +271,21 @@ local Card_Database = {
 local PreviewerGUID = "b0833a"
 local FilterGUID = "0d7bc9"
 local PopupGUID = "5407c8"
+
+local SpawnArea = {
+    TopLeft = Vector({-17.50, 1.46, 12.50}),
+    TopRight = Vector({13.50, 1.46, 12.50}),
+    BottomLeft = Vector({-17.50, 1.46, 6.50})
+    -- BottomRight is not needed :^)
+}
+
+local FigurinesDefaultData = {
+    convex = true,
+    type = 1,
+    material = 3,
+    specular_sharpness = 2,
+    fresnel_strength = 0
+}
 
 local MenuModes = {
     Main = 1,
@@ -429,6 +459,7 @@ function AddCard(army, mode, cardId)
 
     table.insert(selectedContainer, {
         cardNum = cardId,
+        url = cardDB[tonumber(cardId)].url,
         amount = 1,
         unitAmount = 1,
         name = cardDB[tonumber(cardId)].name,
@@ -438,7 +469,10 @@ function AddCard(army, mode, cardId)
         cardLimit = (mode ~= CardModeEnum.Upgrades and
             cardDB[tonumber(cardId)].cardLimit or 1),
         unitLimit = (mode == CardModeEnum.Deployment and
-            cardDB[tonumber(cardId)].unitLimit or 1)
+            cardDB[tonumber(cardId)].unitLimit or 1),
+        belongsToArmy = army,
+        figurineData = cardDB[tonumber(cardId)].figurineData,
+        isElite = cardDB[tonumber(cardId)].isElite
     })
 
     local addedCard = selectedContainer[#selectedContainer]
@@ -660,6 +694,267 @@ function ToggleCmdCards(player, value, id)
     end
 
     RebuildUI()
+end
+
+function GetSpawnAreaBounds()
+    local areaStart = SpawnArea.TopLeft
+    local width = 0
+    local height = 0
+
+    local xDiff = SpawnArea.TopRight.x - SpawnArea.TopLeft.x
+    local zDiff = SpawnArea.TopRight.z - SpawnArea.TopLeft.z
+
+    local xTrueDiff = math.abs(xDiff)
+    local zTrueDiff = math.abs(zDiff)
+
+    local rotation = 0
+
+    if xTrueDiff > zTrueDiff then -- Horizontal
+        if xDiff >= 0 then
+            rotation = 0
+        else
+            rotation = 180
+        end
+
+        width = xTrueDiff
+        height = math.abs(SpawnArea.BottomLeft.z - SpawnArea.TopLeft.z)
+    else -- Vertical
+        if zDiff >= 0 then
+            rotation = 270
+        else
+            rotation = 90
+        end
+
+        width = zTrueDiff
+        height = math.abs(SpawnArea.BottomLeft.x - SpawnArea.TopLeft.x)
+    end
+
+    return areaStart, rotation, width, height
+end
+
+function CalculateGridSpacing(nElements, width, height)
+    local xSpacing = 1
+    local ySpacing = 1
+
+    local a = (width * nElements) / height
+    local b = math.pow(width - height, 2) / (4 * height * height)
+    local c = (width - height) / (2 * height)
+
+    local d = math.sqrt(a + b)
+
+    xSpacing = d - c
+    ySpacing = nElements / xSpacing
+
+    return xSpacing, ySpacing
+end
+
+function SpawnArmy(player, value, id)
+    if #SelectedDeploymentCards == 0 and #SelectedUpgradeCards == 0 and
+        #SelectedCommandCards == 0 then return end
+
+    local nCards = 0
+    local nFigures = 0
+
+    local allCards = {}
+    local figuresToSpawn = {}
+
+    local cardContainers = {
+        SelectedDeploymentCards, SelectedUpgradeCards, SelectedCommandCards
+    }
+
+    for i, container in ipairs(cardContainers) do
+        for j, cardData in ipairs(container) do
+            nCards = nCards + cardData.amount
+
+            if i == 1 then -- Deployment
+                nFigures = nFigures + cardData.unitAmount
+
+                local figureData = cardData.figurineData
+                for k = 1, cardData.unitAmount do
+                    table.insert(figuresToSpawn, {data = figureData, isElite = cardData.isElite})
+                end
+            end
+
+            table.insert(allCards, cardData)
+        end
+    end
+
+    local areaStart, rotation, areaWidth, areaHeight = GetSpawnAreaBounds()
+
+    print(string.format("%s - %s - %d - %d", areaStart:string(), rotation,
+                        areaWidth, areaHeight))
+
+    local cardAreaFactor = 0.35
+
+    local cardAreaWidth = areaWidth * cardAreaFactor
+    local figureAreaWidth = areaWidth * (1 - cardAreaFactor)
+
+    local xCardSpacing, yCardSpacing = CalculateGridSpacing(nCards,
+                                                            cardAreaWidth,
+                                                            areaHeight)
+
+    xCardSpacing = math.ceil(xCardSpacing)
+    yCardSpacing = math.ceil(yCardSpacing)
+
+    local xDiffCard = cardAreaWidth / xCardSpacing
+    local yDiffCard = areaHeight / yCardSpacing
+
+    -- print(string.format("Elements in X: %d - Elements in Y: %d", xCardSpacing, yCardSpacing))
+
+    local xFigureSpacing, yFigureSpacing =
+        CalculateGridSpacing(nFigures, figureAreaWidth, areaHeight)
+
+    xFigureSpacing = math.ceil(xFigureSpacing)
+    yFigureSpacing = math.ceil(yFigureSpacing)
+
+    local xDiffFigure = figureAreaWidth / xFigureSpacing
+    local yDiffFigure = areaHeight / yFigureSpacing
+
+    local i = 1
+    local rowElement = 1
+    local columnElement = 1
+
+    local backwards = false
+    local horizontal = true
+
+    if rotation == 180 or rotation == 90 then backwards = true end
+
+    if rotation == 90 or rotation == 270 then horizontal = false end
+
+    local itemRotation = 0
+    if rotation == 0 then
+        itemRotation = 180
+    elseif rotation == 90 then
+        itemRotation = 270
+    elseif rotation == 180 then
+        itemRotation = 0
+    elseif rotation == 270 then
+        itemRotation = 90
+    end
+
+    local cardBack = "Joe Mama v3"
+
+    while i <= nCards do
+        local selectedCard = allCards[i]
+
+        local armyTeam = selectedCard.belongsToArmy
+        if armyTeam == ArmyEnum.Command then
+            cardBack = Card_Database.Command.BackUrl
+        elseif armyTeam == ArmyEnum.Rebel then
+            cardBack = Card_Database.Rebel.BackUrl
+        elseif armyTeam == ArmyEnum.Imperial then
+            cardBack = Card_Database.Imperial.BackUrl
+        elseif armyTeam == ArmyEnum.Mercenary then
+            cardBack = Card_Database.Mercenary.BackUrl
+        end
+
+        if rowElement > xCardSpacing then
+            rowElement = 1
+            columnElement = columnElement + 1
+        end
+
+        local position = areaStart:copy()
+        if horizontal then
+            local xOffset = (rowElement * xDiffCard) * (backwards and -1 or 1)
+            position:setAt("x", position.x + xOffset)
+
+            local zOffset = (columnElement * yDiffCard) *
+                                (backwards and 1 or -1)
+            position:setAt("z", position.z + zOffset)
+        else
+            local xOffset = (columnElement * yDiffCard) *
+                                (backwards and 1 or -1)
+            position:setAt("x", position.x + xOffset)
+
+            local zOffset = (rowElement * xDiffCard) * (backwards and -1 or 1)
+            position:setAt("z", position.z + zOffset)
+        end
+
+        local card = spawnObject({
+            type = "CardCustom",
+            position = {position:get()},
+            rotation = {0, itemRotation, 0}
+        })
+
+        card.setCustomObject({face = selectedCard.url, back = cardBack})
+
+        rowElement = rowElement + 1
+
+        i = i + 1
+    end
+
+    if nFigures > 0 then
+        i = 1
+        rowElement = 1
+        columnElement = 1
+
+        while i <= nFigures do
+            local selectedFigure = figuresToSpawn[i]
+
+            if rowElement > xFigureSpacing then
+                rowElement = 1
+                columnElement = columnElement + 1
+            end
+
+            local position = areaStart:copy()
+
+            if horizontal then
+                local initialOffset = (cardAreaWidth) * (backwards and -1 or 1)
+                position:setAt("x", position.x + initialOffset)
+
+                local xOffset = (rowElement * xDiffCard) *
+                                    (backwards and -1 or 1)
+                position:setAt("x", position.x + xOffset)
+
+                local zOffset = (columnElement * yDiffCard) *
+                                    (backwards and 1 or -1)
+                position:setAt("z", position.z + zOffset)
+            else
+                local initialOffset = (cardAreaWidth) * (backwards and 1 or -1)
+                position.setAt("z", position.z + initialOffset)
+
+                local xOffset = (columnElement * yDiffCard) *
+                                    (backwards and 1 or -1)
+                position:setAt("x", position.x + xOffset)
+
+                local zOffset = (rowElement * xDiffCard) *
+                                    (backwards and -1 or 1)
+                position:setAt("z", position.z + zOffset)
+            end
+
+            local figureParams = {}
+
+            for k, v in pairs(selectedFigure.data) do
+                figureParams[k] = v
+            end
+
+            for k, v in pairs(FigurinesDefaultData) do
+                figureParams[k] = v
+            end
+
+            local figure = spawnObject({
+                type = "Custom_Model",
+                position = {position:get()},
+                rotation = {0, itemRotation, 0},
+                scale = {0.65, 0.65, 0.65},
+                callback_function = function(obj)
+                    SetFigurineTint(obj, selectedFigure.isElite)
+                end
+            })
+
+            figure.setCustomObject(figureParams)
+
+            rowElement = rowElement + 1
+
+            i = i + 1
+        end
+    end
+
+    -- SetMenuMode(nil, tostring(MenuModes.Main), nil)
+end
+
+function SetFigurineTint(obj, isElite)
+    obj.setColorTint(isElite and {70/255, 30/255, 28/255} or {67/255, 72/255, 76/255})
 end
 
 function RebuildUI()
@@ -942,6 +1237,8 @@ function RebuildUI()
 
         local Command_ArmyCardsText = "Command Cards"
 
+        local armyIndex = 0
+
         if CurrentMenuMode ~= MenuModes.CommandBuild then
             LastArmyMenu = CurrentMenuMode
         end
@@ -954,6 +1251,8 @@ function RebuildUI()
             -- removeCardFunction = removeCardFunction .. "Rebel"
             cardPreviewFunction = cardPreviewFunction .. "Rebel"
             UpdateAssets(assets, ArmyEnum.Rebel)
+
+            armyIndex = ArmyEnum.Rebel
         elseif CurrentMenuMode == MenuModes.ImpBuild then
             armyTitle = "Imperial Army"
             armyColor = menuColors.ArmyBackground.Imperial
@@ -962,6 +1261,8 @@ function RebuildUI()
             -- removeCardFunction = removeCardFunction .. "Imp"
             cardPreviewFunction = cardPreviewFunction .. "Imp"
             UpdateAssets(assets, ArmyEnum.Imperial)
+
+            armyIndex = ArmyEnum.Imperial
         elseif CurrentMenuMode == MenuModes.MercBuild then
             armyTitle = "Mercenary Army"
             armyColor = menuColors.ArmyBackground.Mercenary
@@ -970,6 +1271,8 @@ function RebuildUI()
             -- removeCardFunction = removeCardFunction .. "Merc"
             cardPreviewFunction = cardPreviewFunction .. "Merc"
             UpdateAssets(assets, ArmyEnum.Mercenary)
+
+            armyIndex = ArmyEnum.Mercenary
         elseif CurrentMenuMode == MenuModes.CommandBuild then
             armyTitle = "Command Cards"
             armyColor = menuColors.MainBackground
@@ -977,6 +1280,8 @@ function RebuildUI()
             -- addCardFunction = addCardFunction .. "Cmd"
             cardPreviewFunction = cardPreviewFunction .. "Cmd"
             UpdateAssets(assets, ArmyEnum.Command)
+
+            armyIndex = ArmyEnum.Command
 
             Command_ArmyCardsText = "Army Cards"
         end
@@ -1074,7 +1379,8 @@ function RebuildUI()
                                             tag = "Button",
                                             attributes = {
                                                 class = "StandardButton",
-                                                onClick = "SpawnArmy"
+                                                onClick = "SpawnArmy" .. "(" ..
+                                                    tostring(armyIndex) .. ")"
                                             },
                                             children = {
                                                 [1] = {
@@ -1699,7 +2005,7 @@ function RebuildUI()
             end
 
             cardCostElement.value = tostring(cardCost)
-            if tonumber(cardCostElement.value) > 40 then
+            if cardCost > 40 then
                 cardCostElement.attributes["color"] = "Red"
             end
         end

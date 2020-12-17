@@ -255,4 +255,6 @@ function RebuildUI()
     self.UI.setXmlTable(menuToDisplay)
 end
 
-function onLoad(save_state) RebuildUI() end
+function onLoad(save_state) 
+    --RebuildUI() 
+end

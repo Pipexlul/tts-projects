@@ -138,5 +138,5 @@ function RebuildUI()
 end
 
 function onLoad()
-    RebuildUI()
+    --RebuildUI()
 end
