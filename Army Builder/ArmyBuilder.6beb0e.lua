@@ -89,19 +89,19 @@ local Card_Database = {
                 figurineData = {},
                 cardLimit = 1,
                 unitLimit = 1,
-                isElite = false,
+                isElite = false
             },
             [1] = {
                 name = "Ahsoka Tano",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151887796322/934D13E287E7AC373B1E2FEA754DAAA7EAD1EC06/",
                 cardCost = 8,
                 isGroup = false,
-                traits = bit32.bor(Traits.Rebel, Traits.ForceUser, Traits.Leader, Traits.Spy,
-                                   Traits.Unique),
+                traits = bit32.bor(Traits.Rebel, Traits.ForceUser,
+                                   Traits.Leader, Traits.Spy, Traits.Unique),
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/1010436312492263088/7F0E8BEC685B117FEB45D15D825AB7660D1869BF/",
                     diffuse = "http://cloud-3.steamusercontent.com/ugc/1010436312492263308/A83308826EA1EDF88035FDCE4E3AC19F3F859A52/",
-                    collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/",                    
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/"
                 },
                 cardLimit = 1,
                 unitLimit = 1,
@@ -131,7 +131,7 @@ local Card_Database = {
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/1004808250870187651/886AAA56D9DF9804716C51D4B6FCA0BB6EA1729E/",
                     diffuse = "http://cloud-3.steamusercontent.com/ugc/1004808250870187927/ABCC0D2DDED5B93185649A21FAF9E18E8F4655F1/",
-                    collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/"
                 },
                 cardLimit = 2,
                 unitLimit = 3,
@@ -142,16 +142,16 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669111897311438519/9D1222A33D149C9F4B9B1C6A25583C351EE6D860/",
                 cardCost = 6,
                 isGroup = false,
-                traits = bit32.bor(Traits.Rebel, Traits.Smuggler, Traits.Spy, Traits.Unique),
+                traits = bit32.bor(Traits.Rebel, Traits.Smuggler, Traits.Spy,
+                                   Traits.Unique),
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/923667919241956841/0E07EE3543E54E918E9A793B07BBB3A4DC8CFC19/",
                     collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/",
-                    diffuse = "http://cloud-3.steamusercontent.com/ugc/923667919241957019/F2A79C30FAAF0C668D89FC7C409C59E0BDE60944/",
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/923667919241957019/F2A79C30FAAF0C668D89FC7C409C59E0BDE60944/"
                 },
                 cardLimit = 1,
                 unitLimit = 1,
-                isElite = false,
-                isSpecial = true,
+                isElite = false
             }
         },
         Upgrades = {
@@ -251,7 +251,7 @@ local Card_Database = {
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/923667919241949087/0D8DABA88712761766C62994B02BBF1A3FB7BE53/",
                     collider = "http://cloud-3.steamusercontent.com/ugc/957471858048999768/4960FF0579D4495FDFAFE20E1FDF712412C88EA5/",
-                    diffuse = "http://cloud-3.steamusercontent.com/ugc/923667919241949274/27CE4E785F3230A2C21D53941F40572701F0B89A/",                    
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/923667919241949274/27CE4E785F3230A2C21D53941F40572701F0B89A/"
                 },
                 cardLimit = 2,
                 unitLimit = 1,
@@ -267,7 +267,7 @@ local Card_Database = {
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/923667919241941452/DAAF27E466A8D7C7520F3CCE453798A05B8A1EDD/",
                     diffuse = "http://cloud-3.steamusercontent.com/ugc/923667919241941562/E54AFC77C224DDDA65507B06D31F6BD3E4310517/",
-                    collider = "http://cloud-3.steamusercontent.com/ugc/957471858045585658/2A7442195EA9EDD59B93AC0A6D9ADC5B8CC306DF/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957471858045585658/2A7442195EA9EDD59B93AC0A6D9ADC5B8CC306DF/"
                 },
                 cardLimit = 1,
                 unitLimit = 1,
@@ -278,11 +278,12 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889699723/E63A48B7DFB90134072C5314957C5078641CC054/",
                 cardCost = 8,
                 isGroup = false,
-                traits = bit32.bor(Traits.Merc, Traits.Hunter, Traits.Brawler, Traits.Unique),
+                traits = bit32.bor(Traits.Merc, Traits.Hunter, Traits.Brawler,
+                                   Traits.Unique),
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/957472492314707443/5BA64511C589D5E60ADC2A3BF0CE0B8B4169BDA4/",
                     diffuse = "http://cloud-3.steamusercontent.com/ugc/970997242877946099/CFE7330C8D59C3A695F4F3FEB3AE8EA1169C328D/",
-                    collider = "http://cloud-3.steamusercontent.com/ugc/957471858045585658/2A7442195EA9EDD59B93AC0A6D9ADC5B8CC306DF/",                    
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957471858045585658/2A7442195EA9EDD59B93AC0A6D9ADC5B8CC306DF/"
                 },
                 cardLimit = 1,
                 unitLimit = 1,
@@ -353,16 +354,39 @@ local LastArmyMenu = 0
 
 local IsInPopUpMode = false
 
+local SpecialCardsModifier = {SaskaTeft = false}
+
+local SpecialCards = {
+    Deployment = {
+        [1] = {
+            condition = function()
+                for i, v in ipairs(SelectedDeploymentCards) do
+                    if v.name == "Saska Teft" then
+                        return true
+                    end
+                end
+                
+                return false
+            end,
+            effect = function(deploymentContainer)
+                for i, v in ipairs(Card_Database.Mercenary.Deployment) do
+                    table.insert(deploymentContainer, {index = i, data = v})
+                end
+            end
+        }
+    }
+}
+
 -- local SelectedPreview = nil
 
 function ResultFromPopup(params)
     local result = params[1]
-
+    
     local cardToModify = SelectedDeploymentCards[#SelectedDeploymentCards]
     cardToModify.unitAmount = result
-
+    
     RebuildUI()
-
+    
     IsInPopUpMode = false
 end
 
@@ -441,7 +465,7 @@ function AddCard(army, mode, cardId)
     if selectedContainer == nil then return end
 
     for i, v in ipairs(selectedContainer) do
-        if v.cardNum == cardId then
+        if v.cardNum == cardId and v.belongsToArmy == army then
             local groupDataIndex = nil
 
             if mode == CardModeEnum.Upgrades then
@@ -449,7 +473,8 @@ function AddCard(army, mode, cardId)
             elseif mode == CardModeEnum.Deployment then
                 if v.isGroup then
                     for j, v2 in ipairs(SelectedDeploymentGroupData) do
-                        if v2.cardNum == v.cardNum then
+                        if v2.cardNum == v.cardNum and v2.armyId ==
+                            v.belongsToArmy then
                             groupDataIndex = j
                             if v2.amount + 1 > v.cardLimit then
                                 return
@@ -497,7 +522,7 @@ function AddCard(army, mode, cardId)
     if cardData.isGroup then
         if not ExistsInGroupData(cardId) then
             table.insert(SelectedDeploymentGroupData,
-                         {cardNum = cardId, amount = 1})
+                         {armyId = army, cardNum = cardId, amount = 1})
         end
     end
 
@@ -508,16 +533,12 @@ function AddCard(army, mode, cardId)
         unitAmount = 1,
         name = cardData.name,
         cost = cardData.cardCost,
-        isGroup = (mode == CardModeEnum.Deployment and
-            cardData.isGroup or false),
-        cardLimit = (mode ~= CardModeEnum.Upgrades and
-            cardData.cardLimit or 1),
-        unitLimit = (mode == CardModeEnum.Deployment and
-            cardData.unitLimit or 1),
+        isGroup = (mode == CardModeEnum.Deployment and cardData.isGroup or false),
+        cardLimit = (mode ~= CardModeEnum.Upgrades and cardData.cardLimit or 1),
+        unitLimit = (mode == CardModeEnum.Deployment and cardData.unitLimit or 1),
         belongsToArmy = army,
         figurineData = cardData.figurineData,
         isElite = cardData.isElite,
-        isSpecial = cardData.isSpecial,
         isBig = cardData.isBig
     })
 
@@ -527,6 +548,22 @@ function AddCard(army, mode, cardId)
     end
 
     RebuildUI()
+end
+
+function AddCardDeploy(player, value, id)
+    local dashPos = string.find(value, "-", 1, true)
+    local armyId = tonumber(string.sub(value, 1, dashPos - 1))
+    local indexInArmy = tonumber(string.sub(value, dashPos + 1))
+
+    AddCard(armyId, CardModeEnum.Deployment, indexInArmy)
+end
+
+function AddCardUpgrade(player, value, id)
+    local dashPos = string.find(value, "-", 1, true)
+    local armyId = tonumber(string.sub(value, 1, dashPos - 1))
+    local indexInArmy = tonumber(string.sub(value, dashPos + 1))
+
+    AddCard(armyId, CardModeEnum.Upgrades, indexInArmy)
 end
 
 function AddCardRebelDeploy(player, cardId, id)
@@ -818,12 +855,16 @@ function SpawnArmy(player, value, id)
                 local figureData = cardData.figurineData
                 for k = 1, cardData.amount do
                     for l = 1, cardData.unitAmount do
-                        table.insert(figuresToSpawn, {data = figureData, isElite = cardData.isElite, isBig = cardData.isBig})
+                        table.insert(figuresToSpawn, {
+                            data = figureData,
+                            isElite = cardData.isElite,
+                            isBig = cardData.isBig
+                        })
                     end
                 end
             end
 
-            for m = 1, cardData.amount do 
+            for m = 1, cardData.amount do
                 table.insert(allCards, cardData)
             end
         end
@@ -986,7 +1027,8 @@ function SpawnArmy(player, value, id)
                 type = "Custom_Model",
                 position = {position:get()},
                 rotation = {0, itemRotation, 0},
-                scale = (selectedFigure.isBig and {0.75, 0.75, 0.75} or {0.65, 0.65, 0.65}),
+                scale = (selectedFigure.isBig and {0.75, 0.75, 0.75} or
+                    {0.65, 0.65, 0.65}),
                 callback_function = function(obj)
                     SetFigurineTint(obj, selectedFigure.isElite)
                 end
@@ -1004,7 +1046,8 @@ function SpawnArmy(player, value, id)
 end
 
 function SetFigurineTint(obj, isElite)
-    obj.setColorTint(isElite and {70/255, 30/255, 28/255} or {67/255, 72/255, 76/255})
+    obj.setColorTint(isElite and {70 / 255, 30 / 255, 28 / 255} or
+                         {67 / 255, 72 / 255, 76 / 255})
 end
 
 function RebuildUI()
@@ -1287,8 +1330,6 @@ function RebuildUI()
 
         local Command_ArmyCardsText = "Command Cards"
 
-        local armyIndex = 0
-
         if CurrentMenuMode ~= MenuModes.CommandBuild then
             LastArmyMenu = CurrentMenuMode
         end
@@ -1297,32 +1338,29 @@ function RebuildUI()
             armyTitle = "Rebel Army"
             armyColor = menuColors.ArmyBackground.Rebel
             armyCardsRef = Card_Database.Rebel
-            addCardFunction = addCardFunction .. "Rebel"
+            -- addCardFunction = addCardFunction .. "Rebel"
             -- removeCardFunction = removeCardFunction .. "Rebel"
             cardPreviewFunction = cardPreviewFunction .. "Rebel"
             UpdateAssets(assets, ArmyEnum.Rebel)
 
-            armyIndex = ArmyEnum.Rebel
         elseif CurrentMenuMode == MenuModes.ImpBuild then
             armyTitle = "Imperial Army"
             armyColor = menuColors.ArmyBackground.Imperial
             armyCardsRef = Card_Database.Imperial
-            addCardFunction = addCardFunction .. "Imp"
+            -- addCardFunction = addCardFunction .. "Imp"
             -- removeCardFunction = removeCardFunction .. "Imp"
             cardPreviewFunction = cardPreviewFunction .. "Imp"
             UpdateAssets(assets, ArmyEnum.Imperial)
 
-            armyIndex = ArmyEnum.Imperial
         elseif CurrentMenuMode == MenuModes.MercBuild then
             armyTitle = "Mercenary Army"
             armyColor = menuColors.ArmyBackground.Mercenary
             armyCardsRef = Card_Database.Mercenary
-            addCardFunction = addCardFunction .. "Merc"
+            -- addCardFunction = addCardFunction .. "Merc"
             -- removeCardFunction = removeCardFunction .. "Merc"
             cardPreviewFunction = cardPreviewFunction .. "Merc"
             UpdateAssets(assets, ArmyEnum.Mercenary)
 
-            armyIndex = ArmyEnum.Mercenary
         elseif CurrentMenuMode == MenuModes.CommandBuild then
             armyTitle = "Command Cards"
             armyColor = menuColors.MainBackground
@@ -1330,8 +1368,6 @@ function RebuildUI()
             -- addCardFunction = addCardFunction .. "Cmd"
             cardPreviewFunction = cardPreviewFunction .. "Cmd"
             UpdateAssets(assets, ArmyEnum.Command)
-
-            armyIndex = ArmyEnum.Command
 
             Command_ArmyCardsText = "Army Cards"
         end
@@ -1429,8 +1465,7 @@ function RebuildUI()
                                             tag = "Button",
                                             attributes = {
                                                 class = "StandardButton",
-                                                onClick = "SpawnArmy" .. "(" ..
-                                                    tostring(armyIndex) .. ")"
+                                                onClick = "SpawnArmy"
                                             },
                                             children = {
                                                 [1] = {
@@ -1575,13 +1610,33 @@ function RebuildUI()
                     value = "[Deployment Cards]",
                     attributes = {
                         class = "ButtonText",
-                        alignment = "MiddleLeft"
+                        alignment = "MiddleLeft",
+                        minHeight = "25",
+                        flexibleHeight = "0"
                     }
                 })
 
+                -- CrossFaction handling
+                local allDeploymentToShow = {}
+
                 for i, v in ipairs(armyCardsRef.Deployment) do
+                    table.insert(allDeploymentToShow, {index = i, data = v})
+                end
+
+                for i, v in ipairs(SpecialCards.Deployment) do
+                    if v.condition() then
+                        v.effect(allDeploymentToShow)
+                    end
+                end
+
+                table.sort(allDeploymentToShow,
+                           function(a, b)
+                    return a.data.name < b.data.name
+                end)
+
+                for i, v in ipairs(allDeploymentToShow) do
                     if CurrentFilterValue == 0 or
-                        bit32.btest(CurrentFilterValue, v.traits) then
+                        bit32.btest(CurrentFilterValue, v.data.traits) then
                         table.insert(scrollElements, {
                             tag = "HorizontalLayout",
                             attributes = {
@@ -1604,7 +1659,7 @@ function RebuildUI()
                                     children = {
                                         [1] = {
                                             tag = "Text",
-                                            value = "- " .. v.name,
+                                            value = "- " .. v.data.name,
                                             attributes = {
                                                 class = "ButtonText",
                                                 alignment = "MiddleLeft"
@@ -1624,7 +1679,8 @@ function RebuildUI()
                                             attributes = {
                                                 class = "StandardButton",
                                                 onClick = addCardDeploy .. "(" ..
-                                                    tostring(i) .. ")"
+                                                    tostring(v.data.army) .. "-" ..
+                                                    tostring(v.index) .. ")"
                                             },
                                             children = {
                                                 [1] = {
@@ -1684,11 +1740,19 @@ function RebuildUI()
                     value = "[Skirmish Upgrades]",
                     attributes = {
                         class = "ButtonText",
-                        alignment = "MiddleLeft"
+                        alignment = "MiddleLeft",
+                        minHeight = "25",
+                        flexibleHeight = "0"
                     }
                 })
 
+                local allUpgradeToShow = {}
+
                 for i, v in ipairs(armyCardsRef.Upgrades) do
+                    table.insert(allUpgradeToShow, {index = i, data = v})
+                end
+
+                for i, v in ipairs(allUpgradeToShow) do
                     table.insert(scrollElements, {
                         tag = "HorizontalLayout",
                         attributes = {
@@ -1711,7 +1775,7 @@ function RebuildUI()
                                 children = {
                                     [1] = {
                                         tag = "Text",
-                                        value = "- " .. v.name,
+                                        value = "- " .. v.data.name,
                                         attributes = {
                                             class = "ButtonText",
                                             alignment = "MiddleLeft"
@@ -1731,7 +1795,7 @@ function RebuildUI()
                                         attributes = {
                                             class = "StandardButton",
                                             onClick = addCardUpgrade .. "(" ..
-                                                tostring(i) .. ")"
+                                                tostring(v.data.army) .. "-" .. tostring(v.index) .. ")"
                                         },
                                         children = {
                                             [1] = {
@@ -2065,8 +2129,43 @@ function RebuildUI()
     self.UI.setXmlTable(menuToDisplay)
 end
 
+function AddDetails()
+    -- How to be lazy 101
+
+    for k, v in pairs(Card_Database) do
+        if k == "Command" then
+            for i, cardData in ipairs(v.Cards) do
+                cardData.army = ArmyEnum.Command
+            end
+        elseif k == "Rebel" then
+            for i, cardData in ipairs(v.Deployment) do
+                cardData.army = ArmyEnum.Rebel
+            end
+            for i, cardData in ipairs(v.Upgrades) do
+                cardData.army = ArmyEnum.Rebel
+            end
+        elseif k == "Imperial" then
+            for i, cardData in ipairs(v.Deployment) do
+                cardData.army = ArmyEnum.Imperial
+            end
+            for i, cardData in ipairs(v.Upgrades) do
+                cardData.army = ArmyEnum.Imperial
+            end
+        elseif k == "Mercenary" then
+            for i, cardData in ipairs(v.Deployment) do
+                cardData.army = ArmyEnum.Mercenary
+            end
+            for i, cardData in ipairs(v.Upgrades) do
+                cardData.army = ArmyEnum.Mercenary
+            end
+        end
+    end
+end
+
 function onLoad(save_state)
     print("---------------")
+
+    AddDetails()
 
     RebuildUI()
 end
