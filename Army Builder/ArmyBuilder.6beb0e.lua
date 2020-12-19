@@ -88,14 +88,15 @@ local Card_Database = {
                 traits = 0,
                 figurineData = {},
                 cardLimit = 1,
-                unitLimit = 1
+                unitLimit = 1,
+                isElite = false,
             },
             [1] = {
                 name = "Ahsoka Tano",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151887796322/934D13E287E7AC373B1E2FEA754DAAA7EAD1EC06/",
                 cardCost = 8,
                 isGroup = false,
-                traits = bit32.bor(Traits.ForceUser, Traits.Leader, Traits.Spy,
+                traits = bit32.bor(Traits.Rebel, Traits.ForceUser, Traits.Leader, Traits.Spy,
                                    Traits.Unique),
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/1010436312492263088/7F0E8BEC685B117FEB45D15D825AB7660D1869BF/",
@@ -111,7 +112,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151887873645/05F91C8A629668A32E58C8C6504F2D6DED3F4FC8/",
                 cardCost = 4,
                 isGroup = true,
-                traits = bit32.bor(Traits.Trooper, Traits.Hunter),
+                traits = bit32.bor(Traits.Rebel, Traits.Trooper, Traits.Hunter),
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/1004808250870187651/886AAA56D9DF9804716C51D4B6FCA0BB6EA1729E/",
                     diffuse = "http://cloud-3.steamusercontent.com/ugc/1004808250870187927/ABCC0D2DDED5B93185649A21FAF9E18E8F4655F1/",
@@ -126,7 +127,7 @@ local Card_Database = {
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889629485/560C63B58926BD113531FCBE2F3E282366AD7C9B/",
                 cardCost = 3,
                 isGroup = true,
-                traits = bit32.bor(Traits.Trooper, Traits.Hunter),
+                traits = bit32.bor(Traits.Rebel, Traits.Trooper, Traits.Hunter),
                 figurineData = {
                     mesh = "http://cloud-3.steamusercontent.com/ugc/1004808250870187651/886AAA56D9DF9804716C51D4B6FCA0BB6EA1729E/",
                     diffuse = "http://cloud-3.steamusercontent.com/ugc/1004808250870187927/ABCC0D2DDED5B93185649A21FAF9E18E8F4655F1/",
@@ -135,6 +136,22 @@ local Card_Database = {
                 cardLimit = 2,
                 unitLimit = 3,
                 isElite = false
+            },
+            [4] = {
+                name = "Saska Teft",
+                url = "http://cloud-3.steamusercontent.com/ugc/1669111897311438519/9D1222A33D149C9F4B9B1C6A25583C351EE6D860/",
+                cardCost = 6,
+                isGroup = false,
+                traits = bit32.bor(Traits.Rebel, Traits.Smuggler, Traits.Spy, Traits.Unique),
+                figurineData = {
+                    mesh = "http://cloud-3.steamusercontent.com/ugc/923667919241956841/0E07EE3543E54E918E9A793B07BBB3A4DC8CFC19/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957472288430056202/57B65CFBCECD37E296435DC535967B596159F6B8/",
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/923667919241957019/F2A79C30FAAF0C668D89FC7C409C59E0BDE60944/",
+                },
+                cardLimit = 1,
+                unitLimit = 1,
+                isElite = false,
+                isSpecial = true,
             }
         },
         Upgrades = {
@@ -220,31 +237,56 @@ local Card_Database = {
                 cardCost = 0,
                 isGroup = false,
                 traits = 0,
-                figurineData = {}
+                figurineData = {},
+                cardLimit = 1,
+                unitLimit = 1,
+                isElite = false
             },
             [1] = {
                 name = "Bantha Rider",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889695996/D10799B9DD288A3C1F9849EAF70E237F5E2BCB8E/",
                 cardCost = 9,
                 isGroup = false,
-                traits = bit32.bor(Traits.Creature, Traits.Brawler),
-                figurineData = {}
+                traits = bit32.bor(Traits.Merc, Traits.Creature, Traits.Brawler),
+                figurineData = {
+                    mesh = "http://cloud-3.steamusercontent.com/ugc/923667919241949087/0D8DABA88712761766C62994B02BBF1A3FB7BE53/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957471858048999768/4960FF0579D4495FDFAFE20E1FDF712412C88EA5/",
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/923667919241949274/27CE4E785F3230A2C21D53941F40572701F0B89A/",                    
+                },
+                cardLimit = 2,
+                unitLimit = 1,
+                isElite = true,
+                isBig = true
             },
             [2] = {
                 name = "Boba Fett",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889698483/F1E0C4A396890F53A8A35EA77B1713C8D05EB98F/",
                 cardCost = 13,
                 isGroup = false,
-                traits = Traits.Hunter,
-                figurineData = {}
+                traits = bit32.bor(Traits.Merc, Traits.Hunter, Traits.Unique),
+                figurineData = {
+                    mesh = "http://cloud-3.steamusercontent.com/ugc/923667919241941452/DAAF27E466A8D7C7520F3CCE453798A05B8A1EDD/",
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/923667919241941562/E54AFC77C224DDDA65507B06D31F6BD3E4310517/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957471858045585658/2A7442195EA9EDD59B93AC0A6D9ADC5B8CC306DF/",
+                },
+                cardLimit = 1,
+                unitLimit = 1,
+                isElite = true
             },
             [3] = {
                 name = "Bossk",
                 url = "http://cloud-3.steamusercontent.com/ugc/1669110151889699723/E63A48B7DFB90134072C5314957C5078641CC054/",
                 cardCost = 8,
                 isGroup = false,
-                traits = bit32.bor(Traits.Hunter, Traits.Brawler),
-                figurineData = {}
+                traits = bit32.bor(Traits.Merc, Traits.Hunter, Traits.Brawler, Traits.Unique),
+                figurineData = {
+                    mesh = "http://cloud-3.steamusercontent.com/ugc/957472492314707443/5BA64511C589D5E60ADC2A3BF0CE0B8B4169BDA4/",
+                    diffuse = "http://cloud-3.steamusercontent.com/ugc/970997242877946099/CFE7330C8D59C3A695F4F3FEB3AE8EA1169C328D/",
+                    collider = "http://cloud-3.steamusercontent.com/ugc/957471858045585658/2A7442195EA9EDD59B93AC0A6D9ADC5B8CC306DF/",                    
+                },
+                cardLimit = 1,
+                unitLimit = 1,
+                isElite = true
             }
         },
         Upgrades = {
@@ -450,7 +492,9 @@ function AddCard(army, mode, cardId)
         return nil
     end
 
-    if cardDB[tonumber(cardId)].isGroup then
+    local cardData = cardDB[tonumber(cardId)]
+
+    if cardData.isGroup then
         if not ExistsInGroupData(cardId) then
             table.insert(SelectedDeploymentGroupData,
                          {cardNum = cardId, amount = 1})
@@ -459,20 +503,22 @@ function AddCard(army, mode, cardId)
 
     table.insert(selectedContainer, {
         cardNum = cardId,
-        url = cardDB[tonumber(cardId)].url,
+        url = cardData.url,
         amount = 1,
         unitAmount = 1,
-        name = cardDB[tonumber(cardId)].name,
-        cost = cardDB[tonumber(cardId)].cardCost,
+        name = cardData.name,
+        cost = cardData.cardCost,
         isGroup = (mode == CardModeEnum.Deployment and
-            cardDB[tonumber(cardId)].isGroup or false),
+            cardData.isGroup or false),
         cardLimit = (mode ~= CardModeEnum.Upgrades and
-            cardDB[tonumber(cardId)].cardLimit or 1),
+            cardData.cardLimit or 1),
         unitLimit = (mode == CardModeEnum.Deployment and
-            cardDB[tonumber(cardId)].unitLimit or 1),
+            cardData.unitLimit or 1),
         belongsToArmy = army,
-        figurineData = cardDB[tonumber(cardId)].figurineData,
-        isElite = cardDB[tonumber(cardId)].isElite
+        figurineData = cardData.figurineData,
+        isElite = cardData.isElite,
+        isSpecial = cardData.isSpecial,
+        isBig = cardData.isBig
     })
 
     local addedCard = selectedContainer[#selectedContainer]
@@ -767,15 +813,19 @@ function SpawnArmy(player, value, id)
             nCards = nCards + cardData.amount
 
             if i == 1 then -- Deployment
-                nFigures = nFigures + cardData.unitAmount
+                nFigures = nFigures + (cardData.unitAmount * cardData.amount)
 
                 local figureData = cardData.figurineData
-                for k = 1, cardData.unitAmount do
-                    table.insert(figuresToSpawn, {data = figureData, isElite = cardData.isElite})
+                for k = 1, cardData.amount do
+                    for l = 1, cardData.unitAmount do
+                        table.insert(figuresToSpawn, {data = figureData, isElite = cardData.isElite, isBig = cardData.isBig})
+                    end
                 end
             end
 
-            table.insert(allCards, cardData)
+            for m = 1, cardData.amount do 
+                table.insert(allCards, cardData)
+            end
         end
     end
 
@@ -936,7 +986,7 @@ function SpawnArmy(player, value, id)
                 type = "Custom_Model",
                 position = {position:get()},
                 rotation = {0, itemRotation, 0},
-                scale = {0.65, 0.65, 0.65},
+                scale = (selectedFigure.isBig and {0.75, 0.75, 0.75} or {0.65, 0.65, 0.65}),
                 callback_function = function(obj)
                     SetFigurineTint(obj, selectedFigure.isElite)
                 end
